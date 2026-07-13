@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>loveanddeepspace.wiki.gg Script Formatter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <h1>Dialogue formatter</h1>
+        <p>You can use this to convert a more reader-friendly input to the input required for scripts on <i>loveanddeepspace.wiki.gg</i>.</p>
+    </header>
+
+    <details class="formats-box" open>
+        <summary class="formats-toggle">
+            <h2>INPUT VS OUTPUT OVERVIEW</h2>
+            <span class="formats-chevron">&#9650;</span>
+        </summary>
+        <div class="formats-body">
+            <div class="format-row">
+                <code>Character: Dialogue</code>
+                <span class="arrow">&#8594;</span>
+                <code>{{Script/dialogue|Character|Dialogue}}</code>
+            </div>
+            <div class="format-row">
+                <code>Character (expression): Dialogue</code>
+                <span class="arrow">&#8594;</span>
+                <code>{{Script/dialogue|Character|Dialogue|Expression=expression}}</code>
+            </div>
+            <div class="format-row">
+                <code>Character - override (expression): Dialogue</code>
+                <span class="arrow">&#8594;</span>
+                <code>{{Script/dialogue|Character|Dialogue|Expression=expression|Character Override=override}}</code>
+            </div>
+            <div class="format-row">
+                <code>&lt;type/Radio&gt; / &lt;type/Moment&gt; / &lt;type/Text Message&gt;</code>
+                <span class="arrow">&#8594;</span>
+                <code>{{Script/type|Radio}} / {{Script/type|Moment}} / {{Script/type|Text Message}}</code>
+            </div>
+            <div class="format-row">
+                <code>&lt;Script&gt;<br>Toggle: No Toggle / Collapsed<br>Scheme: ...<br>Theme: ...<br>Title: ...<br>Hide Title: ...<br>Previous Chapters: ...<br>Next Chapters: ...<br>Edit Script: ...</code>
+                <span class="arrow">&#8594;</span>
+                <code>{{Script/start|Toggle=...|Scheme=...|Theme=...|Title=...|Hide Title=...|Previous Chapters=...|Next Chapters=...|Edit Script=...}}<br>...<br>{{Script/end}}</code>
+            </div>
+        </div>
+    </details>
+
+    <div class="cols">
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Input</span>
+                <button class="panel-action" onclick="clearInput()">Clear</button>
+            </div>
+            <div class="input-wrap" style="background: var(--surface);">
+                <div id="input-backdrop" class="input-backdrop"></div>
+                <textarea id="input" placeholder="President: ...Fourteen years ago, the Deepspace Tunnel appeared above Linkon. It led to anomalous geomagnetic storms, and the creatures known as Wanderers emerged.&#10;President: From such an event, the Deepspace Hunter was born.&#10;Now society has returned to a sense of normalcy, but there are still Wanderers lurking in the shadows..."></textarea>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-header">
+                <span class="panel-title">Output</span>
+                <button class="panel-action" id="copy-btn" onclick="copyOutput()">Copy</button>
+            </div>
+            <div id="output" class="output-div readonly" placeholder="Formatted script will appear here."></div>
+        </div>
+    </div>
+
+    <div class="status" id="status"></div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
