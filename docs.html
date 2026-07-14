@@ -17,7 +17,6 @@
     <div class="docs-wrapper">
 
         <nav class="docs-sidebar" aria-label="Dokumentasi navigasi">
-
             <div class="sidebar-group">
                 <div class="sidebar-group-title">Getting Started</div>
                 <a href="#overview" class="sidebar-link active">Overview</a>
@@ -26,8 +25,11 @@
             <div class="sidebar-group">
                 <div class="sidebar-group-title">Formats</div>
                 <a href="#dialogue-formats" class="sidebar-link">Dialogue Formats</a>
-                <a href="#type-tags" class="sidebar-link">Type Tags</a>
                 <a href="#script-block" class="sidebar-link">Script Block</a>
+                <a href="#script-type" class="sidebar-link sub">Script Type</a>
+                <a href="#heading" class="sidebar-link sub">Heading</a>
+                <a href="#break" class="sidebar-link sub">Break</a>
+                <a href="#context" class="sidebar-link sub">Context</a>
             </div>
 
             <div class="sidebar-group">
@@ -38,7 +40,6 @@
             <div class="sidebar-group" style="margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border);">
                 <a href="index.html" class="sidebar-link" style="font-weight: 500;">← Back to formatter</a>
             </div>
-
         </nav>
 
         <main class="docs-content">
@@ -51,6 +52,7 @@
                     <li>Dialogue lines with optional expression and character override</li>
                     <li>Type tags (Radio, Moment, Text Message)</li>
                     <li>Script block with configurable parameters</li>
+                    <li>Break, Context, and Heading elements</li>
                 </ul>
                 <p>The conversion happens <strong>automatically</strong> as you type, and errors are highlighted in red with a status summary.</p>
             </section>
@@ -76,20 +78,6 @@
                 <div class="result-label">Result ▼</div>
                 <div class="example-result">{{Script/dialogue|Rafayel|Hello|Character Override=???}}</div>
                 <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-3);">Note: The override is useful when you want to display a different character name in the script.</p>
-            </section>
-
-            <section id="type-tags" class="doc-section">
-                <h2>Type Tags</h2>
-                <p>Use these tags to insert special script elements.</p>
-                <ul>
-                    <li><code>&lt;type/Radio&gt;</code> → <code>{{Script/type|Radio}}</code></li>
-                    <li><code>&lt;type/Moment&gt;</code> → <code>{{Script/type|Moment}}</code></li>
-                    <li><code>&lt;type/Text Message&gt;</code> → <code>{{Script/type|Text Message}}</code></li>
-                </ul>
-                <p>Case‑insensitive: <code>&lt;type/radio&gt;</code>, <code>&lt;type/moment&gt;</code>, <code>&lt;type/text message&gt;</code> also work.</p>
-                <div class="example">&lt;type/Radio&gt;</div>
-                <div class="result-label">Result ▼</div>
-                <div class="example-result">{{Script/type|Radio}}</div>
             </section>
 
             <section id="script-block" class="doc-section">
@@ -122,12 +110,78 @@
                 </div>
             </section>
 
+            <section id="script-type" class="doc-section">
+                <h2>Type Tags</h2>
+                <p>Use these tags to insert special script elements.</p>
+                <ul>
+                    <li><code>&lt;type/Radio&gt;</code> → <code>{{Script/type|Radio}}</code></li>
+                    <li><code>&lt;type/Moment&gt;</code> → <code>{{Script/type|Moment}}</code></li>
+                    <li><code>&lt;type/Text Message&gt;</code> → <code>{{Script/type|Text Message}}</code></li>
+                </ul>
+                <p>Case‑insensitive: <code>&lt;type/radio&gt;</code>, <code>&lt;type/moment&gt;</code>, <code>&lt;type/text message&gt;</code> also work.</p>
+                <div class="example">&lt;type/Radio&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/type|Radio}}</div>
+            </section>
+
+            <section id="heading" class="doc-section">
+                <h2>Heading</h2>
+                <p>Use <code>##</code> to create a heading. You can optionally add a subtitle inside <code>&lt; &gt;</code> and an alignment with <code>||</code>.</p>
+                <ul>
+                    <li><code>## Text</code> → <code>{{Script/heading|Text}}</code></li>
+                    <li><code>## Text &lt;Subtitle&gt;</code> → <code>{{Script/heading|Text|Subtitle=Subtitle}}</code></li>
+                    <li><code>## Text &lt;Subtitle || Aligns&gt;</code> → <code>{{Script/heading|Text|Subtitle=Subtitle|Align Text=Aligns}}</code></li>
+                </ul>
+                <p>Allowed align values: <code>left</code>, <code>center</code>, <code>right</code>.</p>
+
+                <div class="example">## Introduction</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/heading|Introduction}}</div>
+
+                <div class="example">## Scene 1 &lt;The Beginning&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/heading|Scene 1|Subtitle=The Beginning}}</div>
+
+                <div class="example">## Chapter 3 &lt;The Plot || center&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/heading|Chapter 3|Subtitle=The Plot|Align Text=center}}</div>
+            </section>
+
+            <section id="break" class="doc-section">
+                <h2>Break</h2>
+                <p>Use three dashes <code>---</code> on a line by itself to insert a script break.</p>
+                <div class="example">---</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/break}}</div>
+            </section>
+
+            <section id="context" class="doc-section">
+                <h2>Context</h2>
+                <p>Use <code>&lt;Context&gt;</code> to insert a context block. You can optionally specify a type (e.g., <code>Title</code>, <code>Instructions</code>).</p>
+                <ul>
+                    <li><code>&lt;Context&gt; Text</code> → <code>{{Script/context|Text}}</code></li>
+                    <li><code>&lt;Context Type&gt; Text</code> → <code>{{Script/context|Type=Type|Text}}</code></li>
+                </ul>
+                <div class="example">&lt;Context&gt; This is a context note.</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/context|This is a context note.}}</div>
+
+                <div class="example">&lt;Context Title&gt; Important information</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/context|Type=Title|Important information}}</div>
+
+                <div class="example">&lt;Context Instructions&gt; Follow these steps</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/context|Type=Instructions|Follow these steps}}</div>
+            </section>
+
             <section id="validation" class="doc-section">
                 <h2>Validation &amp; Error Highlighting</h2>
                 <p>Lines that do not match any recognised format will be highlighted in <strong>red</strong> in the input backdrop.</p>
                 <ul>
                     <li>Unrecognised dialogue lines (e.g. missing colon) → red</li>
                     <li>Invalid <code>&lt;Script&gt;</code> block (e.g. wrong <code>Toggle</code> value) and Invalid keys inside → all lines inside the block turn red</li>
+                    <li>Invalid <code>Aligns</code> in headings (must be left/center/right) → line turns red</li>
                 </ul>
                 <p>A status message at the bottom shows how many lines were converted and how many were skipped (with a preview).</p>
                 <div class="example">0 lines converted successfully — 1 line had no recognisable format and were left unchanged:

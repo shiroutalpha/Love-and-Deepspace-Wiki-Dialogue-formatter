@@ -63,6 +63,46 @@ function convertLine(line, isFailedScriptLine) {
     if (isFailedScriptLine) return { out: line, converted: false, blank: false };
     if (line.trim() === '') return { out: '', converted: false, blank: true };
 
+    const breakMatch = line.match(/^\s*---\s*$/);
+    if (breakMatch) {
+        return { out: '{{Script/break}}', converted: true };
+    }
+
+    const contextMatch = line.match(/^\s*<Context(?:\s+([^>]+))?>\s*(.*)$/i);
+    if (contextMatch) {
+        const type = contextMatch[1] ? contextMatch[1].trim() : null;
+        const text = contextMatch[2].trim();
+        if (type) {
+            return { out: `{{Script/context|Type=${type}|${text}}}`, converted: true };
+        } else {
+            return { out: `{{Script/context|${text}}}`, converted: true };
+        }
+    }
+
+    const headingMatch = line.match(/^##\s+(.+?)(?:\s*<\s*([^|]+?)\s*(?:\|\|\s*([^|]+?)\s*)?>)?$/i);
+    if (headingMatch) {
+        const text = headingMatch[1].trim();
+        const subtitle = headingMatch[2] ? headingMatch[2].trim() : null;
+        let aligns = headingMatch[3] ? headingMatch[3].trim() : null;
+
+        if (aligns) {
+            const lowerAlign = aligns.toLowerCase();
+            if (lowerAlign !== 'left' && lowerAlign !== 'center' && lowerAlign !== 'right') {
+                return { out: line, converted: false };
+            }
+        }
+
+        let out = '{{Script/heading|' + text;
+        if (subtitle) {
+            out += '|Subtitle=' + subtitle;
+        }
+        if (aligns) {
+            out += '|Align Text=' + aligns;
+        }
+        out += '}}';
+        return { out: out, converted: true };
+    }
+
     const typeMatch = line.match(/^\s*<type\/(Radio|Moment|Text\s+Message)>\s*$/i);
     if (typeMatch) {
         let type = typeMatch[1].toLowerCase();
@@ -158,7 +198,6 @@ function convert() {
                         break;
                     }
                 }
-
                 if (valid) {
                     let lastLine = blockLines[blockLines.length - 1].trim();
                     let lastContent = lastLine.replace(/\s*>\s*$/, '').trim();
