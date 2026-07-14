@@ -30,6 +30,11 @@
                 <a href="#heading" class="sidebar-link sub">Heading</a>
                 <a href="#break" class="sidebar-link sub">Break</a>
                 <a href="#context" class="sidebar-link sub">Context</a>
+                <a href="#narration" class="sidebar-link sub">Narration</a>
+                <a href="#quote" class="sidebar-link sub">Quote</a>
+                <a href="#interaction" class="sidebar-link sub">Interaction</a>
+                <a href="#choice" class="sidebar-link sub">Choice</a>
+                <a href="#phone" class="sidebar-link sub">Phone</a>
             </div>
 
             <div class="sidebar-group">
@@ -50,9 +55,9 @@
                 <p>It supports multiple input formats including:</p>
                 <ul>
                     <li>Dialogue lines with optional expression and character override</li>
-                    <li>Type tags (Radio, Moment, Text Message)</li>
+                    <li>Type tags (Radio, Moment, Text Message, Reset)</li>
                     <li>Script block with configurable parameters</li>
-                    <li>Break, Context, and Heading elements</li>
+                    <li>Heading, Break, Context, Narration, Quote, Interaction, Choice, and Phone elements</li>
                 </ul>
                 <p>The conversion happens <strong>automatically</strong> as you type, and errors are highlighted in red with a status summary.</p>
             </section>
@@ -117,22 +122,24 @@
                     <li><code>&lt;type/Radio&gt;</code> → <code>{{Script/type|Radio}}</code></li>
                     <li><code>&lt;type/Moment&gt;</code> → <code>{{Script/type|Moment}}</code></li>
                     <li><code>&lt;type/Text Message&gt;</code> → <code>{{Script/type|Text Message}}</code></li>
+                    <li><code>&lt;type/Reset&gt;</code> → <code>{{Script/type|Reset}}</code></li>
                 </ul>
-                <p>Case‑insensitive: <code>&lt;type/radio&gt;</code>, <code>&lt;type/moment&gt;</code>, <code>&lt;type/text message&gt;</code> also work.</p>
+                <p>Case‑insensitive: <code>&lt;type/radio&gt;</code>, <code>&lt;type/moment&gt;</code>, <code>&lt;type/text message&gt;</code>, <code>&lt;type/reset&gt;</code> also work.</p>
                 <div class="example">&lt;type/Radio&gt;</div>
                 <div class="result-label">Result ▼</div>
                 <div class="example-result">{{Script/type|Radio}}</div>
+                <div class="example">&lt;type/Reset&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/type|Reset}}</div>
             </section>
 
             <section id="heading" class="doc-section">
                 <h2>Heading</h2>
-                <p>Use <code>##</code> to create a heading. You can optionally add a subtitle inside <code>&lt; &gt;</code> and an alignment with <code>||</code>.</p>
+                <p>Use <code>##</code> to create a heading. You can optionally add a subtitle inside <code>&lt; &gt;</code>.</p>
                 <ul>
                     <li><code>## Text</code> → <code>{{Script/heading|Text}}</code></li>
                     <li><code>## Text &lt;Subtitle&gt;</code> → <code>{{Script/heading|Text|Subtitle=Subtitle}}</code></li>
-                    <li><code>## Text &lt;Subtitle || Aligns&gt;</code> → <code>{{Script/heading|Text|Subtitle=Subtitle|Align Text=Aligns}}</code></li>
                 </ul>
-                <p>Allowed align values: <code>left</code>, <code>center</code>, <code>right</code>.</p>
 
                 <div class="example">## Introduction</div>
                 <div class="result-label">Result ▼</div>
@@ -142,9 +149,7 @@
                 <div class="result-label">Result ▼</div>
                 <div class="example-result">{{Script/heading|Scene 1|Subtitle=The Beginning}}</div>
 
-                <div class="example">## Chapter 3 &lt;The Plot || center&gt;</div>
-                <div class="result-label">Result ▼</div>
-                <div class="example-result">{{Script/heading|Chapter 3|Subtitle=The Plot|Align Text=center}}</div>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-3);">Note: To add custom alignment, you can manually edit the output to add <code>|Align Text=left</code>, <code>|Align Text=center</code>, or <code>|Align Text=right</code>.</p>
             </section>
 
             <section id="break" class="doc-section">
@@ -175,13 +180,137 @@
                 <div class="example-result">{{Script/context|Type=Instructions|Follow these steps}}</div>
             </section>
 
+            <section id="narration" class="doc-section">
+                <h2>Narration</h2>
+                <p>Use <code>&gt;</code> for standard narration or <code>&gt;&gt;</code> for large narration blocks (supports multiple lines).</p>
+
+                <h3>Single-line narration</h3>
+                <p><code>&gt; Text</code> → <code>{{Script/narration|Text}}</code></p>
+                <div class="example">&gt; The room was silent.</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/narration|The room was silent.}}</div>
+
+                <h3>Multi-line large narration</h3>
+                <p><code>&gt;&gt; Text1</code> followed by <code>&gt;&gt; Text2</code> on subsequent lines will be combined into one block.</p>
+                <div class="example">&gt;&gt; The wind howled.<br>&gt;&gt; The storm approached.</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/narration large|The wind howled.;;The storm approached.}}</div>
+                <p>The converter automatically joins multiple <code>&gt;&gt;</code> lines with <code>;;</code>. The block closes when a different format (dialogue, heading, etc.) is encountered.</p>
+            </section>
+
+            <section id="quote" class="doc-section">
+                <h2>Quote</h2>
+                <p>Use <code>^</code> to insert a quote, optionally with a source.</p>
+                <ul>
+                    <li><code>^Text</code> → <code>{{Script/quote|Text}}</code></li>
+                    <li><code>^Text &lt;Sources&gt;</code> → <code>{{Script/quote|Text|Sources}}</code></li>
+                </ul>
+                <div class="example">^To be, or not to be.</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/quote|To be, or not to be.}}</div>
+
+                <div class="example">^That's one small step for man. &lt;Neil Armstrong&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/quote|That's one small step for man.|Sources=Neil Armstrong}}</div>
+            </section>
+
+            <section id="interaction" class="doc-section">
+                <h2>Interaction</h2>
+                <p>Use <code>!!</code> to create interactive elements. Format: <code>!! Type - Text &lt;additional&gt;</code>.</p>
+                <ul>
+                    <li><code>Type</code> – one word (e.g., Click, Tap, Swipe, Drag, Arrow)</li>
+                    <li><code>Text</code> – description, can have spaces (optional)</li>
+                    <li><code>additional</code> (optional) – inside <code>&lt; &gt;</code>:
+                        <ul>
+                            <li><code>flip</code> → <code>Flip=true</code></li>
+                            <li><code>45</code> (1–360) → <code>Rotate=45</code></li>
+                            <li><code>45//flip</code> → <code>Rotate=45|Flip=true</code></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="example">!! Click - Tap to continue</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Click|Tap to continue}}</div>
+
+                <div class="example">!! Swipe - Swipe left &lt;90&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Swipe|Swipe left|Rotate=90}}</div>
+
+                <div class="example">!! Drag - Drag object &lt;flip&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Drag|Drag object|Flip=true}}</div>
+
+                <div class="example">!! Tap - Tap here &lt;45//flip&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Tap|Tap here|Rotate=45|Flip=true}}</div>
+
+                <div class="example">!! Arrow</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Arrow}}</div>
+
+                <div class="example">!! Arrow &lt;180&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Arrow|Rotate=180}}</div>
+
+                <div class="example">!! Arrow &lt;flip&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Arrow|Flip=true}}</div>
+
+                <div class="example">!! Arrow &lt;90//flip&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Arrow|Rotate=90|Flip=true}}</div>
+            </section>
+
+            <section id="choice" class="doc-section">
+                <h2>Choice</h2>
+                <p>Use <code>??? ... ???</code> to create a tabbed choice menu. Format:</p>
+                <ul>
+                    <li><code>???</code> – start of choice block</li>
+                    <li><code>? Title 1</code> – tab title, followed by content</li>
+                    <li><code>? Title 2</code> – next tab title, followed by content</li>
+                    <li><code>???</code> – end of choice block</li>
+                </ul>
+                <p>The content inside each tab is <strong>automatically converted</strong> (dialogue, type tags, headings, etc.).</p>
+
+                <div class="example">???<br>? Help Rafayel<br>Rafayel: Thank you for helping me!<br>Zayne: That was a wise choice.<br>? Ignore Rafayel<br>Rafayel: Why didn't you help me?<br>Sylus: That was a mistake.<br>???</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">&lt;tabber&gt;<br>|-|Help Rafayel =<br>{{Script/dialogue|Rafayel|Thank you for helping me!}}<br>{{Script/dialogue|Zayne|That was a wise choice.}}<br>|-|Ignore Rafayel =<br>{{Script/dialogue|Rafayel|Why didn't you help me?}}<br>{{Script/dialogue|Sylus|That was a mistake.}}<br>&lt;/tabber&gt;</div>
+            </section>
+
+            <section id="phone" class="doc-section">
+                <h2>Phone</h2>
+                <p>Use <code>@type - name ... @@</code> to create phone interactions (text messages, voice/video calls).</p>
+                <ul>
+                    <li><code>@voice - Name</code> – voice call</li>
+                    <li><code>@video - Name</code> – video call</li>
+                    <li><code>@text message - Name</code> – text message</li>
+                    <li><code>@@</code> – end of phone block</li>
+                    <li><code>Name</code> is optional (can omit <code>- Name</code>)</li>
+                </ul>
+                <p>The content inside is <strong>automatically converted</strong> (dialogue, type tags, headings, etc.).</p>
+
+                <div class="example">@voice - Rafayel<br>Rafayel: Hello, can you hear me?<br>MC: Yes, I can hear you clearly.<br>Rafayel: Good, let's continue.<br>@@</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/phone|Voice|Rafayel| Dialogue =<br>{{Script/dialogue|Rafayel|Hello, can you hear me?}}<br>{{Script/dialogue|MC|Yes, I can hear you clearly.}}<br>{{Script/dialogue|Rafayel|Good, let's continue.}}<br>}}</div>
+
+                <div class="example">@text message - Zayne<br>Zayne: I need you to come to the lab.<br>MC: On my way.<br>@@</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/phone|Text Message|Zayne| Dialogue =<br>{{Script/dialogue|Zayne|I need you to come to the lab.}}<br>{{Script/dialogue|MC|On my way.}}<br>}}</div>
+
+                <div class="example">@video<br>Rafayel: Can you see me?<br>MC: Yes, I can see you.<br>@@</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/phone|Video| Dialogue =<br>{{Script/dialogue|Rafayel|Can you see me?}}<br>{{Script/dialogue|MC|Yes, I can see you.}}<br>}}</div>
+            </section>
+
             <section id="validation" class="doc-section">
                 <h2>Validation &amp; Error Highlighting</h2>
                 <p>Lines that do not match any recognised format will be highlighted in <strong>red</strong> in the input backdrop.</p>
                 <ul>
                     <li>Unrecognised dialogue lines (e.g. missing colon) → red</li>
                     <li>Invalid <code>&lt;Script&gt;</code> block (e.g. wrong <code>Toggle</code> value) and Invalid keys inside → all lines inside the block turn red</li>
-                    <li>Invalid <code>Aligns</code> in headings (must be left/center/right) → line turns red</li>
+                    <li>Invalid <code>Interaction</code> options (e.g. wrong rotate value or invalid flip) → line turns red</li>
+                    <li>Invalid <code>Phone</code> type → line turns red</li>
                 </ul>
                 <p>A status message at the bottom shows how many lines were converted and how many were skipped (with a preview).</p>
                 <div class="example">0 lines converted successfully — 1 line had no recognisable format and were left unchanged:
