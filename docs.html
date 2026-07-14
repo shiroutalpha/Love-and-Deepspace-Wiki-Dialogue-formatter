@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation · loveanddeepspace.wiki.gg Script Formatter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+    <header style="margin-bottom: 1.5rem;">
+        <h1 style="font-size: 1.5rem;">📖 Documentation</h1>
+        <p style="font-size: 0.9rem; color: var(--text-2);">How to use the <strong>Dialogue formatter</strong> for <i>loveanddeepspace.wiki.gg</i>.</p>
+    </header>
+
+    <div class="docs-wrapper">
+
+        <!-- SIDEBAR NAVIGASI -->
+        <nav class="docs-sidebar" aria-label="Dokumentasi navigasi">
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-title">Getting Started</div>
+                <a href="#overview" class="sidebar-link active">Overview</a>
+            </div>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-title">Formats</div>
+                <a href="#dialogue-formats" class="sidebar-link">Dialogue Formats</a>
+                <a href="#type-tags" class="sidebar-link sub">Type Tags</a>
+                <a href="#script-block" class="sidebar-link sub">Script Block</a>
+            </div>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-title">Advanced</div>
+                <a href="#validation" class="sidebar-link">Validation &amp; Errors</a>
+            </div>
+
+            <div class="sidebar-group" style="margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border);">
+                <a href="index.html" class="sidebar-link" style="font-weight: 500;">← Back to formatter</a>
+            </div>
+
+        </nav>
+
+        <!-- KONTEN UTAMA -->
+        <main class="docs-content">
+
+            <section id="overview" class="doc-section">
+                <h2>Overview</h2>
+                <p>This tool converts plain text input into wikitext format compatible with <strong>loveanddeepspace.wiki.gg</strong>.</p>
+                <p>It supports multiple input formats including:</p>
+                <ul>
+                    <li>Dialogue lines with optional expression and character override</li>
+                    <li>Type tags (Radio, Moment, Text Message)</li>
+                    <li>Script block with configurable parameters</li>
+                </ul>
+                <p>The conversion happens <strong>automatically</strong> as you type, and errors are highlighted in red with a status summary.</p>
+            </section>
+
+            <section id="dialogue-formats" class="doc-section">
+                <h2>Dialogue Formats</h2>
+
+                <h3>1. Basic dialogue</h3>
+                <p><code>Character: Dialogue</code></p>
+                <div class="example">Rafayel: Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/dialogue|Rafayel|Hello}}</div>
+
+                <h3>2. Dialogue with expression</h3>
+                <p><code>Character (expression): Dialogue</code></p>
+                <div class="example">Rafayel (smiling): Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/dialogue|Rafayel|Hello|Expression=smiling}}</div>
+
+                <h3>3. Dialogue with character override</h3>
+                <p><code>Character - override: Dialogue</code></p>
+                <div class="example">Rafayel - ???: Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/dialogue|Rafayel|Hello|Character Override=???}}</div>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-3);">Note: The override is useful when you want to display a different character name in the script.</p>
+            </section>
+
+            <section id="type-tags" class="doc-section">
+                <h2>Type Tags</h2>
+                <p>Use these tags to insert special script elements.</p>
+                <ul>
+                    <li><code>&lt;type/Radio&gt;</code> → <code>{{Script/type|Radio}}</code></li>
+                    <li><code>&lt;type/Moment&gt;</code> → <code>{{Script/type|Moment}}</code></li>
+                    <li><code>&lt;type/Text Message&gt;</code> → <code>{{Script/type|Text Message}}</code></li>
+                </ul>
+                <p>Case‑insensitive: <code>&lt;type/radio&gt;</code>, <code>&lt;type/moment&gt;</code>, <code>&lt;type/text message&gt;</code> also work.</p>
+                <div class="example">&lt;type/Radio&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/type|Radio}}</div>
+            </section>
+
+            <section id="script-block" class="doc-section">
+                <h2>Script Block</h2>
+                <p>Wrap your script with <code>&lt;Script&gt;</code> to add <code>{{Script/start}}</code> and <code>{{Script/end}}</code>.</p>
+                <p>You can also include parameters inside the block. Only the following keys are allowed:</p>
+                <ul>
+                    <li><code>Toggle</code> — must be <code>No Toggle</code> (for <code>false</code>) or <code>Collapsed</code> (for <code>Collapsed</code>)</li>
+                    <li><code>Scheme</code> — must be <code>Dark</code> or <code>Light</code></li>
+                    <li><code>Theme</code></li>
+                    <li><code>Title</code></li>
+                    <li><code>Hide Title</code></li>
+                    <li><code>Previous Chapters</code></li>
+                    <li><code>Next Chapters</code></li>
+                    <li><code>Edit Script</code></li>
+                </ul>
+
+                <h3>Simple <code>&lt;Script&gt;</code></h3>
+                <div class="example">&lt;Script&gt;<br>Rafayel: Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/start}}<br>{{Script/dialogue|Rafayel|Hello}}<br>{{Script/end}}</div>
+
+                <h3>With parameters</h3>
+                <div class="example">&lt;Script<br>Title: Birthday 2026<br>Toggle: No Toggle<br>Scheme: Light<br>Theme: Birthday&gt;<br>Rafayel: Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/start|Title=Birthday 2026|Toggle=false|Scheme=Light|Theme=Birthday}}<br>{{Script/dialogue|Rafayel|Hello}}<br>{{Script/end}}</div>
+
+                <div class="note">
+                    <strong>Important:</strong> The <code>Toggle</code> value is strictly validated. Only <code>No Toggle</code> (becomes <code>false</code>) and <code>Collapsed</code> (becomes <code>Collapsed</code>) are accepted. Any other value will cause the entire script block to be marked as invalid and highlighted in red.
+                </div>
+            </section>
+
+            <section id="validation" class="doc-section">
+                <h2>Validation &amp; Error Highlighting</h2>
+                <p>Lines that do not match any recognised format will be highlighted in <strong>red</strong> in the input backdrop.</p>
+                <ul>
+                    <li>Unrecognised dialogue lines (e.g. missing colon) → red</li>
+                    <li>Invalid <code>&lt;Script&gt;</code> block (e.g. wrong <code>Toggle</code> value) and Invalid keys inside → all lines inside the block turn red</li>
+                </ul>
+                <p>A status message at the bottom shows how many lines were converted and how many were skipped (with a preview).</p>
+                <div class="example">0 lines converted successfully — 1 line had no recognisable format and were left unchanged:
+          &lt;Sc&gt;</div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <p>Documentation for the <strong>Dialogue formatter</strong> · Built for <i>loveanddeepspace.wiki.gg</i></p>
+    </footer>
+
+</div>
+</body>
+</html>
