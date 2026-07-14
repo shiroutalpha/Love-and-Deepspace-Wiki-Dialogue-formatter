@@ -24,6 +24,34 @@ function escapeHtml(str) {
     });
 }
 
+function processScriptParam(key, value) {
+    const normalizedKey = normalizeKey(key);
+    let result = { value: value, valid: true };
+
+    if (normalizedKey === 'toggle') {
+        const lowerVal = value.trim().toLowerCase();
+        if (lowerVal === 'yes') {
+            result.value = 'true';
+        } else if (lowerVal === 'no') {
+            result.value = 'false';
+        } else if (lowerVal === 'collapsed') {
+            result.value = 'Collapsed';
+        } else {
+            result.valid = false;
+        }
+    } else if (normalizedKey === 'hide title') {
+        const lowerVal = value.trim().toLowerCase();
+        if (lowerVal === 'yes') {
+            result.value = 'true';
+        } else if (lowerVal === 'no') {
+            result.value = 'false';
+        } else {
+            result.valid = false;
+        }
+    }
+    return result;
+}
+
 function formatDialogue(character, dialogue, extras = {}) {
     const parts = ['{{Script/dialogue', character, dialogue];
     if (extras.expression) parts.push(`Expression=${extras.expression}`);
@@ -119,23 +147,18 @@ function convert() {
                             valid = false;
                             break;
                         }
-                        if (normalizeKey(key) === 'toggle') {
-                            const lowerVal = value.toLowerCase();
-                            if (lowerVal === 'no toggle') {
-                                value = 'false';
-                            } else if (lowerVal === 'collapsed') {
-                                value = 'Collapsed';
-                            } else {
-                                valid = false;
-                                break;
-                            }
+                        const processed = processScriptParam(key, value);
+                        if (!processed.valid) {
+                            valid = false;
+                            break;
                         }
-                        params[key] = value;
+                        params[key] = processed.value;
                     } else {
                         valid = false;
                         break;
                     }
                 }
+
                 if (valid) {
                     let lastLine = blockLines[blockLines.length - 1].trim();
                     let lastContent = lastLine.replace(/\s*>\s*$/, '').trim();
@@ -147,17 +170,14 @@ function convert() {
                             if (!isAllowedKey(key)) {
                                 valid = false;
                             }
-                            if (valid && normalizeKey(key) === 'toggle') {
-                                const lowerVal = value.toLowerCase();
-                                if (lowerVal === 'no toggle') {
-                                    value = 'false';
-                                } else if (lowerVal === 'collapsed') {
-                                    value = 'Collapsed';
-                                } else {
+                            if (valid) {
+                                const processed = processScriptParam(key, value);
+                                if (!processed.valid) {
                                     valid = false;
+                                } else {
+                                    params[key] = processed.value;
                                 }
                             }
-                            if (valid) params[key] = value;
                         } else {
                             valid = false;
                         }
