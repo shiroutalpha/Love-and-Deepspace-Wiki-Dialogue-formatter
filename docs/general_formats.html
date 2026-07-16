@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Formats · Documentation · loveanddeepspace.wiki.gg Script Formatter</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="container">
+
+    <header style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation">☰</button>
+        <div>
+            <h1 style="font-size: 1.5rem; margin-bottom: 0;">📖 General Formats</h1>
+            <p style="font-size: 0.9rem; color: var(--text-2); margin-top: 0.1rem;">Core script formatting elements for the <strong>Dialogue formatter</strong>.</p>
+        </div>
+    </header>
+
+    <div class="docs-wrapper" id="docsWrapper">
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <nav class="docs-sidebar" id="docsSidebar" aria-label="Navigation">
+            <div class="sidebar-group-label">Getting Started</div>
+            <a href="index.html" class="sidebar-link">Overview</a>
+
+            <div class="sidebar-group-label">Basic</div>
+
+            <details class="sidebar-category" open>
+                <summary>General</summary>
+                <div class="category-links">
+                    <a href="general_formats.html#script-block" class="sidebar-link sub">Script Block</a>
+                    <a href="general_formats.html#dialogue" class="sidebar-link sub">Dialogue</a>
+                    <a href="general_formats.html#heading" class="sidebar-link sub">Heading</a>
+                    <a href="general_formats.html#narration" class="sidebar-link sub">Narration</a>
+                    <a href="general_formats.html#quote" class="sidebar-link sub">Quote</a>
+                    <a href="general_formats.html#script-type" class="sidebar-link sub">Script Type</a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Phone</summary>
+                <div class="category-links">
+                    <a href="phone_formats.html#phone-block" class="sidebar-link sub">Phone Block</a>
+                    <a href="phone_formats.html#emoji" class="sidebar-link sub">Emoji</a>
+                    <a href="phone_formats.html#animated-emoji" class="sidebar-link sub">Animated Emoji</a>
+                    <a href="phone_formats.html#poke" class="sidebar-link sub coming-soon">Poke <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#red-packet" class="sidebar-link sub coming-soon">Red Packet <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#share" class="sidebar-link sub coming-soon">Share <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#timestamp" class="sidebar-link sub coming-soon">Timestamp <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#voice-message" class="sidebar-link sub coming-soon">Voice Message <span class="badge">soon</span></a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Player Input</summary>
+                <div class="category-links">
+                    <a href="input_formats.html#choice" class="sidebar-link sub">Choice</a>
+                    <a href="input_formats.html#interaction" class="sidebar-link sub">Interaction</a>
+                </div>
+            </details>
+
+            <div class="sidebar-group-label">Advanced</div>
+
+            <details class="sidebar-category" open>
+                <summary>Audio/Visual Cues</summary>
+                <div class="category-links">
+                    <a href="cues_formats.html#context" class="sidebar-link sub">Context</a>
+                    <a href="cues_formats.html#overlay" class="sidebar-link sub coming-soon">Overlay <span class="badge">soon</span></a>
+                    <a href="cues_formats.html#location" class="sidebar-link sub coming-soon">Location <span class="badge">soon</span></a>
+                    <a href="cues_formats.html#visual" class="sidebar-link sub coming-soon">Visual <span class="badge">soon</span></a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Navigation</summary>
+                <div class="category-links">
+                    <a href="navigation_formats.html#id" class="sidebar-link sub coming-soon">ID <span class="badge">soon</span></a>
+                    <a href="navigation_formats.html#break" class="sidebar-link sub">Break</a>
+                </div>
+            </details>
+
+            <div style="margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border);">
+                <a href="../index.html" class="sidebar-link" style="font-weight: 500;">← Back to formatter</a>
+            </div>
+        </nav>
+
+        <main class="docs-content">
+            <div class="breadcrumb">
+                <a href="index.html">Docs</a>
+                <span class="separator">/</span>
+                <span class="current" id="breadcrumbCurrent">General</span>
+            </div>
+
+            <!-- Script Block -->
+            <section id="script-block" class="doc-section">
+                <h2>Script Block</h2>
+                <p>Wrap your script with <code>&lt;Script&gt;</code> to add <code>{{Script/start}}</code> and <code>{{Script/end}}</code>.</p>
+                <p>You can also include keys inside the block.</p>
+                <p>Only the following keys are allowed:</p>
+
+                <table>
+                    <thead>
+                        <tr><th>#</th><th>Keys</th><th>Description</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td><code>Title</code></td><td>Adds a title to the script.</td></tr>
+                        <tr><td>2</td><td><code>Hide Title</code></td><td>Must be <code>Yes</code> (for <code>true</code>) or <code>No</code> (for <code>false</code>).</td></tr>
+                        <tr><td>3</td><td><code>Toggle</code></td><td>Must be <code>Yes</code> (for <code>true</code>), <code>No</code> (for <code>false</code>), or <code>Collapsed</code>.</td></tr>
+                        <tr><td>4</td><td><code>Scheme</code></td><td>Must be <code>Dark</code> or <code>Light</code>.</td></tr>
+                        <tr><td>5</td><td><code>Theme</code></td><td>Sets the theme styling.</td></tr>
+                        <tr><td>6</td><td><code>Previous Chapters</code></td><td>Must be in the format: <code>Link 1,, Display Name 1;; Link 2,, Display Name 2</code></td></tr>
+                        <tr><td>7</td><td><code>Next Chapters</code></td><td>Must be in the format: <code>Link 1,, Display Name 1;; Link 2,, Display Name 2</code></td></tr>
+                        <tr><td>8</td><td><code>Edit Script</code></td><td>Override the link to where the script can be edited.</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Simple <code>&lt;Script&gt;</code></h3>
+                <div class="example">&lt;Script&gt;<br>Rafayel: Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/start}}<br>{{Script/dialogue|Rafayel|Hello}}<br>{{Script/end}}</div>
+
+                <h3>With keys</h3>
+                <div class="example">&lt;Script<br>Title: Birthday 2026<br>Toggle: No Toggle<br>Scheme: Light<br>Theme: Birthday&gt;<br>Rafayel: Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/start|Title=Birthday 2026|Toggle=false|Scheme=Light|Theme=Birthday}}<br>{{Script/dialogue|Rafayel|Hello}}<br>{{Script/end}}</div>
+
+                <div class="note">
+                    <strong>Important:</strong> The <code>Hide Title</code>, <code>Toggle</code> and <code>Scheme</code> value is strictly validated. Any other value will cause the entire script block to be marked as invalid and highlighted in red.
+                </div>
+            </section>
+
+            <!-- Dialogue -->
+            <section id="dialogue" class="doc-section">
+                <h2>Dialogue</h2>
+
+                <h3>Basic dialogue</h3>
+                <p><code>Character: Dialogue</code> → <code>{{Script/dialogue|Character|Dialogue}}</code></p>
+                <div class="example">Rafayel: Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/dialogue|Rafayel|Hello}}</div>
+
+                <h3>Dialogue with expression</h3>
+                <p><code>Character (Expression): Dialogue</code> → <code>{{Script/dialogue|Character|Dialogue|Expression=Expression}}</code></p>
+                <div class="example">Rafayel (smiling): Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/dialogue|Rafayel|Hello|Expression=smiling}}</div>
+
+                <h3>Dialogue with character override</h3>
+                <p><code>Character - Character Override: Dialogue</code> → <code>{{Script/dialogue|Character|Dialogue|Character Override=Character Override}}</code></p>
+                <div class="example">Rafayel - ???: Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/dialogue|Rafayel|Hello|Character Override=???}}</div>
+
+                <p><code>Character - Character Override (Expression): Dialogue</code> → <code>{{Script/dialogue|Character|Dialogue|Expression=Expression|Character Override=Character Override}}</code></p>
+                <div class="example">Rafayel - ??? (smiling): Hello</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/dialogue|Rafayel|Hello|Expression=smiling|Character Override=???}}</div>
+
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-3);">Note: The override is useful when you want to display a different character name in the script.</p>
+
+                <h3>Full Parameter Reference</h3>
+                <p>The <code>{{Script/dialogue}}</code> template supports the following parameters. The converter automatically generates <strong>Character</strong>, <strong>Dialogue</strong>, <strong>Character Override</strong>, and <strong>Expression</strong>. All other parameters must be added manually to the output.</p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Description</th>
+                            <th>Auto-generated?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>Character</code></td>
+                            <td>Fills in the name of the Character that is speaking. If the input is <code>BLANK</code>, no name tag will be used.</td>
+                            <td>✅ Yes</td>
+                        </tr>
+                        <tr>
+                            <td><code>Dialogue</code></td>
+                            <td>Displays the dialogue text. You can use <code>;;</code> to add multiple lines under the same name tag (for uninterrupted chains).</td>
+                            <td>✅ Yes</td>
+                        </tr>
+                        <tr>
+                            <td><code>Character Override</code></td>
+                            <td>Overrides the displayed character name while keeping the original character's color-coding (e.g., <code>Sylus</code> → <code>???</code>).</td>
+                            <td>✅ Yes</td>
+                        </tr>
+                        <tr>
+                            <td><code>Expression</code></td>
+                            <td>Switches between different expressions for Avatars.</td>
+                            <td>✅ Yes</td>
+                        </tr>
+                        <tr>
+                            <td><code>Text Bubble</code></td>
+                            <td>Changes the display from a text box to a text bubble.</td>
+                            <td>❌ Manual</td>
+                        </tr>
+                        <tr>
+                            <td><code>Avatar</code></td>
+                            <td>Adds an Avatar next to the text. <a href="https://loveanddeepspace.wiki.gg/wiki/Editing_Resources/Avatars" target="_blank">Check available Avatars here</a>.</td>
+                            <td>❌ Manual</td>
+                        </tr>
+                        <tr>
+                            <td><code>Circle</code></td>
+                            <td>Set to <code>true</code> to show the Avatar as a circle (used for phone Avatars).</td>
+                            <td>❌ Manual</td>
+                        </tr>
+                        <tr>
+                            <td><code>Avatar Width</code></td>
+                            <td>Resizes the Avatar when necessary.</td>
+                            <td>❌ Manual</td>
+                        </tr>
+                        <tr>
+                            <td><code>Text Background</code></td>
+                            <td>Changes the background color of the Text Box/Bubble.</td>
+                            <td>❌ Manual</td>
+                        </tr>
+                        <tr>
+                            <td><code>Text Border</code></td>
+                            <td>Changes the styling of the border around the Text Box/Bubble.</td>
+                            <td>❌ Manual</td>
+                        </tr>
+                        <tr>
+                            <td><code>Text Color</code></td>
+                            <td>Changes the color of the text within the Text Box/Bubble.</td>
+                            <td>❌ Manual</td>
+                        </tr>
+                        <tr>
+                            <td><code>Align</code></td>
+                            <td>Changes the alignment of the dialogue box. Default: left for all characters, right for Main Character. Supports <code>Left</code>, <code>Center</code>, <code>Right</code>.</td>
+                            <td>❌ Manual</td>
+                        </tr>
+                        <tr>
+                            <td><code>Align Text</code></td>
+                            <td>Aligns the text within the dialogue box. Supports <code>left</code>, <code>center</code>, <code>right</code>.</td>
+                            <td>❌ Manual</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-3);"><strong>Example of manual addition:</strong> If you want to add an Avatar and center alignment, edit the output from <code>{{Script/dialogue|Rafayel|Hello}}</code> to <code>{{Script/dialogue|Rafayel|Hello|Avatar=Rafayel|Align=Center}}</code>.</p>
+            </section>
+
+            <!-- Heading -->
+            <section id="heading" class="doc-section">
+                <h2>Heading</h2>
+                <p>Use <code>##</code> to create a heading. You can optionally add a subtitle inside <code>&lt;...&gt;</code>.</p>
+
+                <h3>Basic heading</h3>
+                <p><code>## Text</code> → <code>{{Script/heading|Text}}</code></p>
+                <div class="example">## Introduction</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/heading|Introduction}}</div>
+
+                <h3>Heading with subtitle</h3>
+                <p><code>## Text &lt;Subtitle&gt;</code> → <code>{{Script/heading|Text|Subtitle=Subtitle}}</code></p>
+                <div class="example">## Scene 1 &lt;The Beginning&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/heading|Scene 1|Subtitle=The Beginning}}</div>
+
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-3);">Note: To add custom alignment, you can manually edit the output to add <code>|Align Text=...</code>.</p>
+            </section>
+
+            <!-- Narration -->
+            <section id="narration" class="doc-section">
+                <h2>Narration</h2>
+                <p>Use <code>&gt;</code> for standard narration or <code>&gt;&gt;</code> for large narration blocks (supports multiple lines).</p>
+
+                <h3>Single-line narration</h3>
+                <p><code>&gt; Text</code> → <code>{{Script/narration|Text}}</code></p>
+                <div class="example">&gt; The room was silent.</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/narration|The room was silent.}}</div>
+
+                <h3>Single-line large narration</h3>
+                <p><code>&gt;&gt; Text</code> → <code>{{Script/narration large|Text}}</code></p>
+                <div class="example">&gt;&gt; The wind howled.</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/narration large|The wind howled.}}</div>
+
+                <h3>Multi-line large narration</h3>
+                <p><code>&gt;&gt; Text1</code> followed by <code>&gt;&gt; Text2</code> on subsequent lines will be combined into one block.</p>
+                <div class="example">&gt;&gt; The wind howled.<br>&gt;&gt; The storm approached.</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/narration large|The wind howled.;;The storm approached.}}</div>
+                <p>The converter automatically joins multiple <code>&gt;&gt;</code> lines with <code>;;</code>. The block closes when a different format (dialogue, heading, etc.) is encountered.</p>
+
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-3);">Note: To add custom alignment, you can manually edit the output to add <code>|Align Text=...</code>.</p>
+            </section>
+
+            <!-- Quote -->
+            <section id="quote" class="doc-section">
+                <h2>Quote</h2>
+                <p>Use <code>^</code> to insert a quote, optionally with a source.</p>
+
+                <h3>Basic quote</h3>
+                <p><code>^Text</code> → <code>{{Script/quote|Text}}</code></p>
+                <div class="example">^To be, or not to be.</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/quote|To be, or not to be.}}</div>
+
+                <h3>Quote with sources</h3>
+                <p><code>^Text &lt;Source&gt;</code> → <code>{{Script/quote|Text|Source}}</code></p>
+                <div class="example">^That's one small step for man. &lt;Neil Armstrong&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/quote|That's one small step for man.|Neil Armstrong}}</div>
+
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-3);">Note: To add custom alignment, you can manually edit the output to add <code>|Align Text=...</code>.</p>
+            </section>
+            
+            <!-- Script Type -->
+            <section id="script-type" class="doc-section">
+                <h2>Script Type</h2>
+                <p>Use these tags to change script style.</p>
+                <ul>
+                    <li><code>&lt;type/Radio&gt;</code> → <code>{{Script/type|Radio}}</code></li>
+                    <li><code>&lt;type/Moment&gt;</code> → <code>{{Script/type|Moment}}</code></li>
+                    <li><code>&lt;type/Text Message&gt;</code> → <code>{{Script/type|Text Message}}</code></li>
+                    <li><code>&lt;type/Reset&gt;</code> → <code>{{Script/type|Reset}}</code></li>
+                </ul>
+                
+                <div class="example">&lt;type/Radio&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/type|Radio}}</div>
+
+                <h3>Use <code>&lt;type/Reset&gt;</code> to reset the script style</h3>
+                <div class="example">&lt;type/Reset&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/type|Reset}}</div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <p>Documentation for the <strong>Dialogue formatter</strong> · Built for <i>loveanddeepspace.wiki.gg</i></p>
+    </footer>
+
+</div>
+
+<script src="docs.js"></script>
+</body>
+</html>

@@ -16,6 +16,72 @@ const PHONE_TYPE = {
     'text message': 'Text Message'
 };
 
+const EMOJI_LIST = [
+    "Adorable", "Angry", "Announcer", "Asleep", "Awkward", "Bawling", "Bomb", "Bored",
+    "Cake", "Celebrating", "Cheers", "Chuckling", "Claps", "Cocky", "Coffee", "Cursing",
+    "Daydreaming", "Disdain", "Dizzy", "Dog Head", "Doubtful", "Epic", "Feeling Wronged",
+    "Fist Bump", "Flowers", "Flowers for You", "Genius", "Gift", "Going Crazy", "Grumpy",
+    "Hands Up", "Handshake", "Heart‑broken", "Hearteyes", "Hearts", "Huggie", "Hush",
+    "It's Locked", "Kneeling", "Knocking", "Laughing", "LMAO", "Miserable", "Music",
+    "Mwah!", "OK", "On the Verge of Tears", "Patting the Head", "Pig Head", "Pills",
+    "Playful", "Pouting", "Provocative", "Red Packet", "ROFL", "Sad", "Seduction",
+    "See Ya", "Shrugs", "Shut Up", "Shy", "Smiling", "Smirking", "Spectating", "Strive",
+    "Surprised", "Sweating", "Tearful", "Thankful", "The Moon", "The Sun", "Thumbs Up",
+    "Victory", "Waves", "Whistling", "Wicked", "Wide Grin", "Wilting"
+];
+
+const ANIMATED_PREFIXES = [
+    "Galaxy Kid",
+    "Happy Snowman",
+    "Artsy Birb",
+    "Grumpy Crow",
+    "Sunny Apple"
+];
+
+const ANIMATED_EMOJI_LIST = {
+    "Galaxy Kid": [
+        "!", "?", "...", "A Bummer", "Dizzy", "Flower Launch", "G'nite", "Got It",
+        "Happy", "Heart", "Hewwo", "I Don't Care", "Lemme See", "Not Sleepy",
+        "Okay Now", "Pat Pat", "Plop", "Pretend", "Recharging", "See Ya", "Stare",
+        "Sweats", "Thanks", "U Got This", "Wow"
+    ],
+    "Happy Snowman": [
+        "?", "...", "Alert", "Analyze", "Angy", "Awake?", "Busy", "Frosty Flowers",
+        "Glasses", "Grumpy", "Hmph", "I Don't Care", "Indifferent", "Later", "No",
+        "Nope", "Not Listening", "Observe", "Okay", "Overtime", "Sigh", "Tea",
+        "Time for Meds", "Yea", "You Angsty"
+    ],
+    "Artsy Birb": [
+        "!!!", "???", "Angry", "Bloom Tint", "Boring", "Busy", "Bye", "Comfort Me",
+        "Cutee", "Dummy", "Genius", "Go Away", "Heartbroken", "Heya", "Huggie",
+        "I Don't Care", "I'm Babey", "Knock Knock", "Love Ya", "Morning", "Peep",
+        "Popcorns", "Proud", "Tearing", "Thinking"
+    ],
+    "Grumpy Crow": [
+        "!", "?", "Amazing", "Angy", "Annoyed", "Boring", "Comfy", "Coming", "Cuddle",
+        "Don't Wanna", "Feather Bloom", "For You", "Gimme Everything", "Good Night",
+        "Graceful", "Happy", "Indifferent", "No", "Not Looking", "Pondering", "Proud",
+        "Speechless", "Sure", "That It?", "U Doing What Now"
+    ],
+    "Sunny Apple": [
+        "!!", "??", "Angy", "Bye", "Dizzy", "Flower Greeting", "Funny", "G'nite",
+        "Happy", "Heartbroken", "Hmm", "Huggie", "Hurt", "Morning", "Never Mind",
+        "No", "No No No", "Okay", "On What Basis", "Pat Pat", "Spill It", "Tired",
+        "U Got This", "Watcha Doing", "Yay"
+    ]
+};
+
+const INTERACTION_TYPE_LIST = [
+    "Tap", "Tap Multi", "Tap Multi Timed",
+    "Arrow", "Arrow Timed", "Arrow Curve", "Arrow Curve Timed",
+    "Camera", "Talk", "Talk Timed", "Voice",
+    "Touch", "Trace", "Rotate",
+    "Swipe", "Swipe Timed", "Breathe",
+    "Hold", "Timed"
+];
+
+const ANIMATED_EMOJI = new RegExp(`^<(${ANIMATED_PREFIXES.join('|')}):\\s*([^>]+)>$`, 'i');
+
 const DIALOGUE_COVRD = /^([^-]+?)\s*-\s*([^-]+?)\s*(?:\(([^)]+)\))?\s*:\s*(.*)$/;
 const DIALOGUE_EXPR  = /^([^(]+?)\s*\(([^)]+)\)\s*:\s*(.*)$/;
 const DIALOGUE       = /^([^:]+?):\s*(.*)$/;
@@ -31,7 +97,7 @@ const PHONE_START = /^\s*@\s*(voice|video|text\s+message)\s*(?:-\s*(.+?))?\s*$/i
 const PHONE_END = /^\s*@@\s*$/;
 
 const HEADING = /^##\s+(.+?)(?:\s*<\s*([^|]+?)\s*>)?$/i;
-const INTERACTION = /^!!\s+([A-Za-z]+)(?:\s*-\s*([^<]*?))?(?:\s*<([^>]+)>)?$/;
+const INTERACTION = /^!!\s+([A-Za-z\s]+)(?:\s*-\s*([^<]*?))?(?:\s*<([^>]+)>)?$/;
 const QUOTE = /^\^\s*(.+?)(?:\s*<\s*(.+?)\s*>)?$/;
 const NARRATION = /^>\s*(.+)$/;
 const NARRATION_LARGE = /^\s*>>\s+/;
@@ -45,6 +111,14 @@ function normalizeKey(key) {
 
 function isAllowedKey(key) {
     return SCRIPT_KEY.includes(normalizeKey(key));
+}
+
+function isValidAnimatedEmoji(prefix, suffix) {
+    const prefixNorm = prefix.trim();
+    const suffixNorm = suffix.trim();
+    if (!ANIMATED_PREFIXES.includes(prefixNorm)) return false;
+    const suffixes = ANIMATED_EMOJI_LIST[prefixNorm] || [];
+    return suffixes.some(s => s.toLowerCase() === suffixNorm.toLowerCase());
 }
 
 function escapeHtml(str) {
@@ -98,6 +172,9 @@ function convertLine(line, isFailedScriptLine) {
     const interactionMatch = line.match(INTERACTION);
     if (interactionMatch) {
         const type = interactionMatch[1].trim();
+        if (!INTERACTION_TYPE_LIST.some(t => t.toLowerCase() === type.toLowerCase())) {
+            return { out: line, converted: false };
+        }
         let text = interactionMatch[2] ? interactionMatch[2].trim() : '';
         const opts = interactionMatch[3] ? interactionMatch[3].trim() : null;
         let rotate = null;
@@ -148,7 +225,7 @@ function convertLine(line, isFailedScriptLine) {
         const sources = quoteMatch[2] ? quoteMatch[2].trim() : null;
         let out = '{{Script/quote|' + text;
         if (sources) {
-            out += '|Sources=' + sources;
+            out += '|' + sources;
         }
         out += '}}';
         return { out: out, converted: true };
@@ -200,23 +277,101 @@ function convertLine(line, isFailedScriptLine) {
         const character = m[1].trim();
         const override = m[2].trim();
         const expression = m[3] ? m[3].trim() : null;
-        const dialogue = m[4].trim();
-        return { out: formatDialogue(character, dialogue, { expression, characterOverride: override }), converted: true };
+        let dialogue = m[4].trim();
+
+        const animatedMatch = dialogue.match(ANIMATED_EMOJI);
+        if (animatedMatch) {
+            const prefix = animatedMatch[1];
+            const suffix = animatedMatch[2].trim();
+            if (!isValidAnimatedEmoji(prefix, suffix)) {
+                return { out: line, converted: false };
+            }
+            const fullTag = `${prefix}: ${suffix}`;
+            return { out: `{{Script/animated emoji|${character}|${fullTag}}}`, converted: true };
+        }
+
+        let hasInvalidEmoji = false;
+        dialogue = dialogue.replace(/<([^:>]+)>/g, function(match, emojiName) {
+            if (EMOJI_LIST.includes(emojiName)) {
+                return `{{Emoji|${emojiName}}}`;
+            } else {
+                hasInvalidEmoji = true;
+                return match;
+            }
+        });
+        if (hasInvalidEmoji) {
+            return { out: line, converted: false };
+        }
+
+        const out = formatDialogue(character, dialogue, { expression, characterOverride: override });
+        return { out: out, converted: true };
     }
 
     m = line.match(DIALOGUE_EXPR);
     if (m) {
         const character = m[1].trim();
         const expression = m[2].trim();
-        const dialogue = m[3].trim();
-        return { out: formatDialogue(character, dialogue, { expression }), converted: true };
+        let dialogue = m[3].trim();
+
+        const animatedMatch = dialogue.match(ANIMATED_EMOJI);
+        if (animatedMatch) {
+            const prefix = animatedMatch[1];
+            const suffix = animatedMatch[2].trim();
+            if (!isValidAnimatedEmoji(prefix, suffix)) {
+                return { out: line, converted: false };
+            }
+            const fullTag = `${prefix}: ${suffix}`;
+            return { out: `{{Script/animated emoji|${character}|${fullTag}}}`, converted: true };
+        }
+
+        let hasInvalidEmoji = false;
+        dialogue = dialogue.replace(/<([^:>]+)>/g, function(match, emojiName) {
+            if (EMOJI_LIST.includes(emojiName)) {
+                return `{{Emoji|${emojiName}}}`;
+            } else {
+                hasInvalidEmoji = true;
+                return match;
+            }
+        });
+        if (hasInvalidEmoji) {
+            return { out: line, converted: false };
+        }
+
+        const out = formatDialogue(character, dialogue, { expression });
+        return { out: out, converted: true };
     }
 
     m = line.match(DIALOGUE);
     if (m) {
         const character = m[1].trim();
-        const dialogue = m[2].trim();
-        return { out: formatDialogue(character, dialogue, {}), converted: true };
+        let dialogue = m[2].trim();
+
+        const animatedMatch = dialogue.match(ANIMATED_EMOJI);
+        if (animatedMatch) {
+            const prefix = animatedMatch[1];
+            const suffix = animatedMatch[2].trim();
+            if (!isValidAnimatedEmoji(prefix, suffix)) {
+                return { out: line, converted: false };
+            }
+            const fullTag = `${prefix}: ${suffix}`;
+            return { out: `{{Script/animated emoji|${character}|${fullTag}}}`, converted: true };
+        }
+
+        let hasInvalidEmoji = false;
+        dialogue = dialogue.replace(/<([^:>]+)>/g, function(match, emojiName) {
+            if (EMOJI_LIST.includes(emojiName)) {
+                return `{{Emoji|${emojiName}}}`;
+            } else {
+                hasInvalidEmoji = true;
+                return match;
+            }
+        });
+        if (hasInvalidEmoji) {
+            return { out: line, converted: false };
+        }
+
+        const out = formatDialogue(character, dialogue, {});
+        return { out: out, converted: true };
     }
 
     return { out: line, converted: false };

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started · Documentation · loveanddeepspace.wiki.gg Script Formatter</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="container">
+
+    <header style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation">☰</button>
+        <div>
+            <h1 style="font-size: 1.5rem; margin-bottom: 0;">📖 Documentation</h1>
+            <p style="font-size: 0.9rem; color: var(--text-2); margin-top: 0.1rem;">How to use the <strong>Dialogue formatter</strong> for <i>loveanddeepspace.wiki.gg</i>.</p>
+        </div>
+    </header>
+
+    <div class="docs-wrapper" id="docsWrapper">
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <nav class="docs-sidebar" id="docsSidebar" aria-label="Navigation">
+
+            <div class="sidebar-group-label">Getting Started</div>
+            <a href="index.html" class="sidebar-link active">Overview</a>
+
+            <div class="sidebar-group-label">Basic</div>
+
+            <details class="sidebar-category" open>
+                <summary>General</summary>
+                <div class="category-links">
+                    <a href="general_formats.html#script-block" class="sidebar-link sub">Script Block</a>
+                    <a href="general_formats.html#dialogue" class="sidebar-link sub">Dialogue</a>
+                    <a href="general_formats.html#heading" class="sidebar-link sub">Heading</a>
+                    <a href="general_formats.html#narration" class="sidebar-link sub">Narration</a>
+                    <a href="general_formats.html#quote" class="sidebar-link sub">Quote</a>
+                    <a href="general_formats.html#script-type" class="sidebar-link sub">Script Type</a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Phone</summary>
+                <div class="category-links">
+                    <a href="phone_formats.html#phone-block" class="sidebar-link sub">Phone Block</a>
+                    <a href="phone_formats.html#emoji" class="sidebar-link sub">Emoji</a>
+                    <a href="phone_formats.html#animated-emoji" class="sidebar-link sub">Animated Emoji</a>
+                    <a href="phone_formats.html#poke" class="sidebar-link sub coming-soon">Poke <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#red-packet" class="sidebar-link sub coming-soon">Red Packet <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#share" class="sidebar-link sub coming-soon">Share <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#timestamp" class="sidebar-link sub coming-soon">Timestamp <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#voice-message" class="sidebar-link sub coming-soon">Voice Message <span class="badge">soon</span></a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Player Input</summary>
+                <div class="category-links">
+                    <a href="input_formats.html#choice" class="sidebar-link sub">Choice</a>
+                    <a href="input_formats.html#interaction" class="sidebar-link sub">Interaction</a>
+                </div>
+            </details>
+
+            <div class="sidebar-group-label">Advanced</div>
+
+            <details class="sidebar-category" open>
+                <summary>Audio/Visual Cues</summary>
+                <div class="category-links">
+                    <a href="cues_formats.html#context" class="sidebar-link sub">Context</a>
+                    <a href="cues_formats.html#overlay" class="sidebar-link sub coming-soon">Overlay <span class="badge">soon</span></a>
+                    <a href="cues_formats.html#location" class="sidebar-link sub coming-soon">Location <span class="badge">soon</span></a>
+                    <a href="cues_formats.html#visual" class="sidebar-link sub coming-soon">Visual <span class="badge">soon</span></a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Navigation</summary>
+                <div class="category-links">
+                    <a href="navigation_formats.html#id" class="sidebar-link sub coming-soon">ID <span class="badge">soon</span></a>
+                    <a href="navigation_formats.html#break" class="sidebar-link sub">Break</a>
+                </div>
+            </details>
+
+            <div style="margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border);">
+                <a href="../index.html" class="sidebar-link" style="font-weight: 500;">← Back to formatter</a>
+            </div>
+        </nav>
+
+        <main class="docs-content">
+            <div class="breadcrumb">
+                <a href="index.html">Docs</a>
+                <span class="separator">/</span>
+                <span class="current">Overview</span>
+            </div>
+
+            <section class="doc-section">
+                <h2>Overview</h2>
+                <p>This tool converts plain text input into wikitext format compatible with <strong>loveanddeepspace.wiki.gg</strong>.</p>
+                <p>It supports multiple input formats including:</p>
+                <ul>
+                    <li>Dialogue lines with optional expression and character override</li>
+                    <li>Emoji and Animated Emoji (with validation)</li>
+                    <li>Type tags (Radio, Moment, Text Message, Reset)</li>
+                    <li>Script block with configurable parameters</li>
+                    <li>Heading, Break, Context, Narration, Quote, Interaction, Choice, and Phone elements</li>
+                </ul>
+                <p>The conversion happens <strong>automatically</strong> as you type, and errors are highlighted in red with a status summary.</p>
+            </section>
+
+            <section class="doc-section">
+                <h2>Quick Start</h2>
+                <p>Just type your script in the input panel. The converter will automatically transform recognised patterns.</p>
+                <div class="example">Rafayel: Hello, world!</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/dialogue|Rafayel|Hello, world!}}</div>
+                <p style="margin-top: 0.5rem;">For a complete guide, browse the sections in the sidebar.</p>
+            </section>
+
+            <section id="validation" class="doc-section">
+                <h2>Validation &amp; Error Highlighting</h2>
+                <p>Lines that do not match any recognised format will be highlighted in <strong>red</strong> in the input backdrop.</p>
+                <p>A status message at the bottom shows how many lines were converted and how many were skipped (with a preview).</p>
+                <div class="example" style="background:var(--warning-bg); color:var(--warning); border-left-color:var(--warning);">0 lines converted successfully — 1 line had no recognisable format and were left unchanged:<br>
+                    &lt;List of eror source&gt;</div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <p>Documentation for the <strong>Dialogue formatter</strong> · Built for <i>loveanddeepspace.wiki.gg</i></p>
+    </footer>
+
+</div>
+
+<script src="docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Formats · Documentation · loveanddeepspace.wiki.gg Script Formatter</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="container">
+
+    <header style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation">☰</button>
+        <div>
+            <h1 style="font-size: 1.5rem; margin-bottom: 0;">📖 Phone Formats</h1>
+            <p style="font-size: 0.9rem; color: var(--text-2); margin-top: 0.1rem;">Phone interactions and emoji references for the <strong>Dialogue formatter</strong>.</p>
+        </div>
+    </header>
+
+    <div class="docs-wrapper" id="docsWrapper">
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <nav class="docs-sidebar" id="docsSidebar" aria-label="Navigation">
+            <div class="sidebar-group-label">Getting Started</div>
+            <a href="index.html" class="sidebar-link">Overview</a>
+
+            <div class="sidebar-group-label">Basic</div>
+
+            <details class="sidebar-category" open>
+                <summary>General</summary>
+                <div class="category-links">
+                    <a href="general_formats.html#script-block" class="sidebar-link sub">Script Block</a>
+                    <a href="general_formats.html#dialogue" class="sidebar-link sub">Dialogue</a>
+                    <a href="general_formats.html#heading" class="sidebar-link sub">Heading</a>
+                    <a href="general_formats.html#narration" class="sidebar-link sub">Narration</a>
+                    <a href="general_formats.html#quote" class="sidebar-link sub">Quote</a>
+                    <a href="general_formats.html#script-type" class="sidebar-link sub">Script Type</a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Phone</summary>
+                <div class="category-links">
+                    <a href="phone_formats.html#phone-block" class="sidebar-link sub">Phone Block</a>
+                    <a href="phone_formats.html#emoji" class="sidebar-link sub">Emoji</a>
+                    <a href="phone_formats.html#animated-emoji" class="sidebar-link sub">Animated Emoji</a>
+                    <a href="phone_formats.html#poke" class="sidebar-link sub coming-soon">Poke <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#red-packet" class="sidebar-link sub coming-soon">Red Packet <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#share" class="sidebar-link sub coming-soon">Share <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#timestamp" class="sidebar-link sub coming-soon">Timestamp <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#voice-message" class="sidebar-link sub coming-soon">Voice Message <span class="badge">soon</span></a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Player Input</summary>
+                <div class="category-links">
+                    <a href="input_formats.html#choice" class="sidebar-link sub">Choice</a>
+                    <a href="input_formats.html#interaction" class="sidebar-link sub">Interaction</a>
+                </div>
+            </details>
+
+            <div class="sidebar-group-label">Advanced</div>
+
+            <details class="sidebar-category" open>
+                <summary>Audio/Visual Cues</summary>
+                <div class="category-links">
+                    <a href="cues_formats.html#context" class="sidebar-link sub">Context</a>
+                    <a href="cues_formats.html#overlay" class="sidebar-link sub coming-soon">Overlay <span class="badge">soon</span></a>
+                    <a href="cues_formats.html#location" class="sidebar-link sub coming-soon">Location <span class="badge">soon</span></a>
+                    <a href="cues_formats.html#visual" class="sidebar-link sub coming-soon">Visual <span class="badge">soon</span></a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Navigation</summary>
+                <div class="category-links">
+                    <a href="navigation_formats.html#id" class="sidebar-link sub coming-soon">ID <span class="badge">soon</span></a>
+                    <a href="navigation_formats.html#break" class="sidebar-link sub">Break</a>
+                </div>
+            </details>
+
+            <div style="margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border);">
+                <a href="../index.html" class="sidebar-link" style="font-weight: 500;">← Back to formatter</a>
+            </div>
+        </nav>
+
+        <main class="docs-content">
+            <div class="breadcrumb">
+                <a href="index.html">Docs</a>
+                <span class="separator">/</span>
+                <span class="current" id="breadcrumbCurrent">Phone</span>
+            </div>
+
+            <!-- Phone Block -->
+            <section id="phone-block" class="doc-section">
+                <h2>Phone Block</h2>
+                <p>Use <code>@type - name ... @@</code> to create phone interactions (text messages, voice/video calls).</p>
+                <ul>
+                    <li><code>@voice - Name</code> – voice call</li>
+                    <li><code>@video - Name</code> – video call</li>
+                    <li><code>@text message - Name</code> – text message</li>
+                    <li><code>@@</code> – end of phone block</li>
+                    <li><code>Character</code> is optional (can omit <code>- Character</code>)</li>
+                </ul>
+
+                <h3>Basic phone block</h3>
+                <div class="example">@voice - Rafayel<br>Rafayel: Hello, can you hear me?<br>MC: Yes, I can hear you clearly.<br>Rafayel: Good, let's continue.<br>@@</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/phone|Voice|Rafayel| Dialogue =<br>{{Script/dialogue|Rafayel|Hello, can you hear me?}}<br>{{Script/dialogue|MC|Yes, I can hear you clearly.}}<br>{{Script/dialogue|Rafayel|Good, let's continue.}}<br>}}</div>
+
+                <div class="example">@text message - Zayne<br>Zayne: I need you to come to the lab.<br>MC: On my way.<br>@@</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/phone|Text Message|Zayne| Dialogue =<br>{{Script/dialogue|Zayne|I need you to come to the lab.}}<br>{{Script/dialogue|MC|On my way.}}<br>}}</div>
+
+                <h3>Phone block without character name</h3>
+                <div class="example">@video<br>Rafayel: Can you see me?<br>MC: Yes, I can see you.<br>@@</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/phone|Video| Dialogue =<br>{{Script/dialogue|Rafayel|Can you see me?}}<br>{{Script/dialogue|MC|Yes, I can see you.}}<br>}}</div>
+            </section>
+
+            <!-- Emoji -->
+            <section id="emoji" class="doc-section">
+                <h2>Emoji</h2>
+                <p>You can insert emojis inside dialogue using <code>&lt;Emoji&gt;</code>.</p>
+                <p>Emoji list: <a href="https://loveanddeepspace.wiki.gg/wiki/Editing_Resources/Yellow_Beanie" target="_blank">loveanddeepspace.wiki.gg/wiki/Editing_Resources/Yellow_Beanie</a></p>
+
+                <details>
+                    <summary>Show Emoji List</summary>
+                    <div class="details-content">
+                        <table class="emoji">
+                            <tbody>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Adorable_(Sticker)_full.png" alt="Adorable" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Angry_(Sticker)_full.png" alt="Angry" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Announcer_(Sticker)_full.png" alt="Announcer" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Asleep_(Sticker)_full.png" alt="Asleep" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Adorable</code></td>
+                                    <td><code>Angry</code></td>
+                                    <td><code>Announcer</code></td>
+                                    <td><code>Asleep</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Awkward_(Sticker)_full.png" alt="Awkward" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Bawling_(Sticker)_full.png" alt="Bawling" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Bomb_(Sticker)_full.png" alt="Bomb" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Bored_(Sticker)_full.png" alt="Bored" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Awkward</code></td>
+                                    <td><code>Bawling</code></td>
+                                    <td><code>Bomb</code></td>
+                                    <td><code>Bored</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Cake_(Sticker)_full.png" alt="Cake" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Celebrating_(Sticker)_full.png" alt="Celebrating" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Cheers_(Sticker)_full.png" alt="Cheers" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Chuckling_(Sticker)_full.png" alt="Chuckling" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Cake</code></td>
+                                    <td><code>Celebrating</code></td>
+                                    <td><code>Cheers</code></td>
+                                    <td><code>Chuckling</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Claps_(Sticker)_full.png" alt="Claps" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Cocky_(Sticker)_full.png" alt="Cocky" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Coffee_(Sticker)_full.png" alt="Coffee" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Cursing_(Sticker)_full.png" alt="Cursing" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Claps</code></td>
+                                    <td><code>Cocky</code></td>
+                                    <td><code>Coffee</code></td>
+                                    <td><code>Cursing</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Daydreaming_(Sticker)_full.png" alt="Daydreaming" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Disdain_(Sticker)_full.png" alt="Disdain" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Dizzy_(Sticker)_full.png" alt="Dizzy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Dog_Head_(Sticker)_full.png" alt="Dog Head" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Daydreaming</code></td>
+                                    <td><code>Disdain</code></td>
+                                    <td><code>Dizzy</code></td>
+                                    <td><code>Dog Head</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Doubtful_(Sticker)_full.png" alt="Doubtful" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Epic_(Sticker)_full.png" alt="Epic" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Feeling_Wronged_(Sticker)_full.png" alt="Feeling Wronged" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Fist_Bump_(Sticker)_full.png" alt="Fist Bump" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Doubtful</code></td>
+                                    <td><code>Epic</code></td>
+                                    <td><code>Feeling Wronged</code></td>
+                                    <td><code>Fist Bump</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Flowers_(Sticker)_full.png" alt="Flowers" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Flowers_for_You_(Sticker)_full.png" alt="Flowers for You" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Genius_(Sticker)_full.png" alt="Genius" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Gift_(Sticker)_full.png" alt="Gift" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Flowers</code></td>
+                                    <td><code>Flowers for You</code></td>
+                                    <td><code>Genius</code></td>
+                                    <td><code>Gift</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Going_Crazy_(Sticker)_full.png" alt="Going Crazy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Grumpy_(Sticker)_full.png" alt="Grumpy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Hands_Up_(Sticker)_full.png" alt="Hands Up" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Handshake_(Sticker)_full.png" alt="Handshake" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Going Crazy</code></td>
+                                    <td><code>Grumpy</code></td>
+                                    <td><code>Hands Up</code></td>
+                                    <td><code>Handshake</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Heart-broken_(Sticker)_full.png" alt="Heart‑broken" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Hearteyes_(Sticker)_full.png" alt="Hearteyes" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Hearts_(Sticker)_full.png" alt="Hearts" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Huggie_(Sticker)_full.png" alt="Huggie" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Heart‑broken</code></td>
+                                    <td><code>Hearteyes</code></td>
+                                    <td><code>Hearts</code></td>
+                                    <td><code>Huggie</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Hush_(Sticker)_full.png" alt="Hush" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_It%27s_Locked_(Sticker)_full.png" alt="It's Locked" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Kneeling_(Sticker)_full.png" alt="Kneeling" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Knocking_(Sticker)_full.png" alt="Knocking" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Hush</code></td>
+                                    <td><code>It's Locked</code></td>
+                                    <td><code>Kneeling</code></td>
+                                    <td><code>Knocking</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Laughing_(Sticker)_full.png" alt="Laughing" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_LMAO_(Sticker)_full.png" alt="LMAO" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Miserable_(Sticker)_full.png" alt="Miserable" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Music_(Sticker)_full.png" alt="Music" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Laughing</code></td>
+                                    <td><code>LMAO</code></td>
+                                    <td><code>Miserable</code></td>
+                                    <td><code>Music</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Mwah%21_(Sticker)_full.png" alt="Mwah!" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_OK_(Sticker)_full.png" alt="OK" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_On_the_Verge_of_Tears_(Sticker)_full.png" alt="On the Verge of Tears" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Patting_the_Head_(Sticker)_full.png" alt="Patting the Head" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Mwah!</code></td>
+                                    <td><code>OK</code></td>
+                                    <td><code>On the Verge of Tears</code></td>
+                                    <td><code>Patting the Head</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Pig_Head_(Sticker)_full.png" alt="Pig Head" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Pills_(Sticker)_full.png" alt="Pills" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Playful_(Sticker)_full.png" alt="Playful" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Pouting_(Sticker)_full.png" alt="Pouting" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Pig Head</code></td>
+                                    <td><code>Pills</code></td>
+                                    <td><code>Playful</code></td>
+                                    <td><code>Pouting</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Provocative_(Sticker)_full.png" alt="Provocative" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Red_Packet_(Sticker)_full.png" alt="Red Packet" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_ROFL_(Sticker)_full.png" alt="ROFL" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Sad_(Sticker)_full.png" alt="Sad" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Provocative</code></td>
+                                    <td><code>Red Packet</code></td>
+                                    <td><code>ROFL</code></td>
+                                    <td><code>Sad</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Seduction_(Sticker)_full.png" alt="Seduction" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_See_Ya_(Sticker)_full.png" alt="See Ya" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Shrugs_(Sticker)_full.png" alt="Shrugs" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Shut_Up_(Sticker)_full.png" alt="Shut Up" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Seduction</code></td>
+                                    <td><code>See Ya</code></td>
+                                    <td><code>Shrugs</code></td>
+                                    <td><code>Shut Up</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Shy_(Sticker)_full.png" alt="Shy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Smiling_(Sticker)_full.png" alt="Smiling" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Smirking_(Sticker)_full.png" alt="Smirking" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Spectating_(Sticker)_full.png" alt="Spectating" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Shy</code></td>
+                                    <td><code>Smiling</code></td>
+                                    <td><code>Smirking</code></td>
+                                    <td><code>Spectating</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Strive_(Sticker)_full.png" alt="Strive" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Surprised_(Sticker)_full.png" alt="Surprised" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Sweating_(Sticker)_full.png" alt="Sweating" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Tearful_(Sticker)_full.png" alt="Tearful" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Strive</code></td>
+                                    <td><code>Surprised</code></td>
+                                    <td><code>Sweating</code></td>
+                                    <td><code>Tearful</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Thankful_(Sticker)_full.png" alt="Thankful" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_The_Moon_(Sticker)_full.png" alt="The Moon" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_The_Sun_(Sticker)_full.png" alt="The Sun" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Thumbs_Up_(Sticker)_full.png" alt="Thumbs Up" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Thankful</code></td>
+                                    <td><code>The Moon</code></td>
+                                    <td><code>The Sun</code></td>
+                                    <td><code>Thumbs Up</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Victory_(Sticker)_full.png" alt="Victory" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Waves_(Sticker)_full.png" alt="Waves" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Whistling_(Sticker)_full.png" alt="Whistling" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Wicked_(Sticker)_full.png" alt="Wicked" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Victory</code></td>
+                                    <td><code>Waves</code></td>
+                                    <td><code>Whistling</code></td>
+                                    <td><code>Wicked</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Wide_Grin_(Sticker)_full.png" alt="Wide Grin" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Yellow_Beanie_Wilting_(Sticker)_full.png" alt="Wilting" width="48" height="48"></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Wide Grin</code></td>
+                                    <td><code>Wilting</code></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+
+                <h3>Usage</h3>
+                <div class="example">Rafayel: Hello &lt;Victory&gt; &lt;Strive&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/dialogue|Rafayel|Hello {{Emoji|Victory}} {{Emoji|Strive}}}}</div>
+
+                <div class="note">
+                    <strong>Note:</strong> The emoji are validated against predefined lists. If a line contains any invalid emoji, the entire line will be marked as invalid.
+                </div>
+            </section>
+
+            <!-- Animated Emoji -->
+            <section id="animated-emoji" class="doc-section">
+                <h2>Animated Emoji</h2>
+                <p>Animated emojis appear on a line by themselves (no other text). Format: <code>Character: &lt;Prefix: Suffix&gt;</code>.</p>
+                <p>Emoji list: <a href="https://loveanddeepspace.wiki.gg/wiki/Phone/Animated_Emojis" target="_blank">loveanddeepspace.wiki.gg/wiki/Phone/Animated_Emojis</a></p>
+
+                <details>
+                    <summary>Show Animated Emoji List</summary>
+                    <div class="details-content">
+                        <h3>Prefixes</h3>
+                        <ul>
+                            <li><a href="#galaxy-kid"><strong>Galaxy Kid</strong></a></li>
+                            <li><a href="#happy-snowman"><strong>Happy Snowman</strong></a></li>
+                            <li><a href="#artsy-birb"><strong>Artsy Birb</strong></a></li>
+                            <li><a href="#grumpy-crow"><strong>Grumpy Crow</strong></a></li>
+                            <li><a href="#sunny-apple"><strong>Sunny Apple</strong></a></li>
+                        </ul>
+
+                        <h3 id="galaxy-kid">Galaxy Kid</h3>
+                        <table class="emoji">
+                            <tbody>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_%21.gif" alt="!" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_%3F.gif" alt="?" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_....gif" alt="..." width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_A_Bummer.gif" alt="A Bummer" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>!</code></td>
+                                    <td><code>?</code></td>
+                                    <td><code>...</code></td>
+                                    <td><code>A Bummer</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Dizzy.gif" alt="Dizzy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Flower_Launch.gif" alt="Flower Launch" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_G%27nite.gif" alt="G'nite" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Got_It.gif" alt="Got It" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Dizzy</code></td>
+                                    <td><code>Flower Launch</code></td>
+                                    <td><code>G'nite</code></td>
+                                    <td><code>Got It</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Happy.gif" alt="Happy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Heart.gif" alt="Heart" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Hewwo.gif" alt="Hewwo" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_I_Dont_Care.gif" alt="I Don't Care" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Happy</code></td>
+                                    <td><code>Heart</code></td>
+                                    <td><code>Hewwo</code></td>
+                                    <td><code>I Don't Care</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Lemme_See.gif" alt="Lemme See" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Not_Sleepy.gif" alt="Not Sleepy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Okay_Now.gif" alt="Okay Now" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Pat_Pat.gif" alt="Pat Pat" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Lemme See</code></td>
+                                    <td><code>Not Sleepy</code></td>
+                                    <td><code>Okay Now</code></td>
+                                    <td><code>Pat Pat</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Plop.gif" alt="Plop" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Pretend.gif" alt="Pretend" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Recharging.gif" alt="Recharging" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_See_Ya.gif" alt="See Ya" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Plop</code></td>
+                                    <td><code>Pretend</code></td>
+                                    <td><code>Recharging</code></td>
+                                    <td><code>See Ya</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Stare.gif" alt="Stare" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Sweats.gif" alt="Sweats" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Thanks.gif" alt="Thanks" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_U_Got_This.gif" alt="U Got This" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Stare</code></td>
+                                    <td><code>Sweats</code></td>
+                                    <td><code>Thanks</code></td>
+                                    <td><code>U Got This</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Galaxy_Kid_Wow.gif" alt="Wow" width="48" height="48"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Wow</code></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3 id="happy-snowman">Happy Snowman</h3>
+                        <table class="emoji">
+                            <tbody>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_%3F.gif" alt="?" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_....gif" alt="..." width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Alert.gif" alt="Alert" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Analyze.gif" alt="Analyze" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>?</code></td>
+                                    <td><code>...</code></td>
+                                    <td><code>Alert</code></td>
+                                    <td><code>Analyze</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Angy.gif" alt="Angy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Awake%3F.gif" alt="Awake?" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Busy.gif" alt="Busy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Frosty_Flowers.gif" alt="Frosty Flowers" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Angy</code></td>
+                                    <td><code>Awake?</code></td>
+                                    <td><code>Busy</code></td>
+                                    <td><code>Frosty Flowers</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Glasses.gif" alt="Glasses" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Grumpy.gif" alt="Grumpy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Hmph.gif" alt="Hmph" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_I_Dont_Care.gif" alt="I Don't Care" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Glasses</code></td>
+                                    <td><code>Grumpy</code></td>
+                                    <td><code>Hmph</code></td>
+                                    <td><code>I Don't Care</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Indifferent.gif" alt="Indifferent" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Later.gif" alt="Later" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_No.gif" alt="No" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Nope.gif" alt="Nope" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Indifferent</code></td>
+                                    <td><code>Later</code></td>
+                                    <td><code>No</code></td>
+                                    <td><code>Nope</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Not_Listening.gif" alt="Not Listening" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Observe.gif" alt="Observe" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Okay.gif" alt="Okay" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Overtime.gif" alt="Overtime" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Not Listening</code></td>
+                                    <td><code>Observe</code></td>
+                                    <td><code>Okay</code></td>
+                                    <td><code>Overtime</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Sigh.gif" alt="Sigh" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Tea.gif" alt="Tea" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Time_for_Meds.gif" alt="Time for Meds" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_Yea.gif" alt="Yea" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Sigh</code></td>
+                                    <td><code>Tea</code></td>
+                                    <td><code>Time for Meds</code></td>
+                                    <td><code>Yea</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Happy_Snowman_You_Angsty.gif" alt="You Angsty" width="48" height="48"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>You Angsty</code></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3 id="artsy-birb">Artsy Birb</h3>
+                        <table class="emoji">
+                            <tbody>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_%21%21%21.gif" alt="!!!" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_%3F%3F%3F.gif" alt="???" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Angry.gif" alt="Angry" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Bloom_Tint.gif" alt="Bloom Tint" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>!!!</code></td>
+                                    <td><code>???</code></td>
+                                    <td><code>Angry</code></td>
+                                    <td><code>Bloom Tint</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Boring.gif" alt="Boring" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Busy.gif" alt="Busy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Bye.gif" alt="Bye" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Comfort_Me.gif" alt="Comfort Me" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Boring</code></td>
+                                    <td><code>Busy</code></td>
+                                    <td><code>Bye</code></td>
+                                    <td><code>Comfort Me</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Cutee.gif" alt="Cutee" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Dummy.gif" alt="Dummy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Genius.gif" alt="Genius" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Go_Away.gif" alt="Go Away" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Cutee</code></td>
+                                    <td><code>Dummy</code></td>
+                                    <td><code>Genius</code></td>
+                                    <td><code>Go Away</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Heartbroken.gif" alt="Heartbroken" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Heya.gif" alt="Heya" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Huggie.gif" alt="Huggie" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_I_Dont_Care.gif" alt="I Don't Care" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Heartbroken</code></td>
+                                    <td><code>Heya</code></td>
+                                    <td><code>Huggie</code></td>
+                                    <td><code>I Don't Care</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_I%27m_Babey.gif" alt="I'm Babey" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Knock_Knock.gif" alt="Knock Knock" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Love_Ya.gif" alt="Love Ya" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Morning.gif" alt="Morning" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>I'm Babey</code></td>
+                                    <td><code>Knock Knock</code></td>
+                                    <td><code>Love Ya</code></td>
+                                    <td><code>Morning</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Peep.gif" alt="Peep" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Popcorns.gif" alt="Popcorns" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Proud.gif" alt="Proud" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Tearing.gif" alt="Tearing" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Peep</code></td>
+                                    <td><code>Popcorns</code></td>
+                                    <td><code>Proud</code></td>
+                                    <td><code>Tearing</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Artsy_Birb_Thinking.gif" alt="Thinking" width="48" height="48"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Thinking</code></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3 id="grumpy-crow">Grumpy Crow</h3>
+                        <table class="emoji">
+                            <tbody>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_%21.gif" alt="!" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_%3F.gif" alt="?" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Amazing.gif" alt="Amazing" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Angy.gif" alt="Angy" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>!</code></td>
+                                    <td><code>?</code></td>
+                                    <td><code>Amazing</code></td>
+                                    <td><code>Angy</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Annoyed.gif" alt="Annoyed" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Boring.gif" alt="Boring" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Comfy.gif" alt="Comfy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Coming.gif" alt="Coming" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Annoyed</code></td>
+                                    <td><code>Boring</code></td>
+                                    <td><code>Comfy</code></td>
+                                    <td><code>Coming</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Cuddle.gif" alt="Cuddle" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Dont_Wanna.gif" alt="Don't Wanna" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Feather_Bloom.gif" alt="Feather Bloom" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_For_You.gif" alt="For You" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Cuddle</code></td>
+                                    <td><code>Don't Wanna</code></td>
+                                    <td><code>Feather Bloom</code></td>
+                                    <td><code>For You</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Gimme_Everything.gif" alt="Gimme Everything" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Good_Night.gif" alt="Good Night" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Graceful.gif" alt="Graceful" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Happy.gif" alt="Happy" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Gimme Everything</code></td>
+                                    <td><code>Good Night</code></td>
+                                    <td><code>Graceful</code></td>
+                                    <td><code>Happy</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Indifferent.gif" alt="Indifferent" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_No.gif" alt="No" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Not_Looking.gif" alt="Not Looking" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Pondering.gif" alt="Pondering" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Indifferent</code></td>
+                                    <td><code>No</code></td>
+                                    <td><code>Not Looking</code></td>
+                                    <td><code>Pondering</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Proud.gif" alt="Proud" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Speechless.gif" alt="Speechless" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_Sure.gif" alt="Sure" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_That_It%3F.gif" alt="That It?" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Proud</code></td>
+                                    <td><code>Speechless</code></td>
+                                    <td><code>Sure</code></td>
+                                    <td><code>That It?</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Grumpy_Crow_U_Doing_What_Now.gif" alt="U Doing What Now" width="48" height="48"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>U Doing What Now</code></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <h3 id="sunny-apple">Sunny Apple</h3>
+                        <table class="emoji">
+                            <tbody>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_%21%21.gif" alt="!!" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_%3F%3F.gif" alt="??" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Angy.gif" alt="Angy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Bye.gif" alt="Bye" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>!!</code></td>
+                                    <td><code>??</code></td>
+                                    <td><code>Angy</code></td>
+                                    <td><code>Bye</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Dizzy.gif" alt="Dizzy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Flower_Greeting.gif" alt="Flower Greeting" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Funny.gif" alt="Funny" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_G%27nite.gif" alt="G'nite" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Dizzy</code></td>
+                                    <td><code>Flower Greeting</code></td>
+                                    <td><code>Funny</code></td>
+                                    <td><code>G'nite</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Happy.gif" alt="Happy" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Heartbroken.gif" alt="Heartbroken" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Hmm.gif" alt="Hmm" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Huggie.gif" alt="Huggie" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Happy</code></td>
+                                    <td><code>Heartbroken</code></td>
+                                    <td><code>Hmm</code></td>
+                                    <td><code>Huggie</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Hurt.gif" alt="Hurt" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Morning.gif" alt="Morning" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Never_Mind.gif" alt="Never Mind" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_No.gif" alt="No" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Hurt</code></td>
+                                    <td><code>Morning</code></td>
+                                    <td><code>Never Mind</code></td>
+                                    <td><code>No</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_No_No_No.gif" alt="No No No" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Okay.gif" alt="Okay" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_On_What_Basis.gif" alt="On What Basis" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Pat_Pat.gif" alt="Pat Pat" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>No No No</code></td>
+                                    <td><code>Okay</code></td>
+                                    <td><code>On What Basis</code></td>
+                                    <td><code>Pat Pat</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Spill_It.gif" alt="Spill It" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Tired.gif" alt="Tired" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_U_Got_This.gif" alt="U Got This" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Watcha_Doing.gif" alt="Watcha Doing" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Spill It</code></td>
+                                    <td><code>Tired</code></td>
+                                    <td><code>U Got This</code></td>
+                                    <td><code>Watcha Doing</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/Sunny_Apple_Yay.gif" alt="Yay" width="48" height="48"></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Yay</code></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+
+                <h3>Usage</h3>
+                <ul>
+                    <li><code>Character: &lt;Galaxy Kid: Wave&gt;</code> → <code>{{Script/animated emoji|Character|Galaxy Kid: Wave}}</code></li>
+                    <li>If the prefix or suffix is invalid → the entire line is marked as invalid (highlighted red).</li>
+                </ul>
+
+                <div class="example">Xavier: &lt;Galaxy Kid: Wave&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/animated emoji|Xavier|Galaxy Kid: Wave}}</div>
+
+                <div class="example">Rafayel: &lt;Artsy Birb: Bye&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/animated emoji|Rafayel|Artsy Birb: Bye}}</div>
+
+                <div class="note">
+                    <strong>Note:</strong>
+                    <ul>
+                        <li>Animated emoji lines must contain <strong>only</strong> the emoji tag – no other text. If there is any other text (e.g., <code>Rafayel: Hello &lt;Artsy Birb: Bye&gt;</code>), the line is considered invalid.</li>
+                        <li>The prefix and suffix are validated against predefined lists. If the combination is invalid, the entire line will be marked as invalid.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Poke -->
+            <section id="poke" class="doc-section">
+                <h2>Poke</h2>
+                <p><em>Coming soon.</em> This feature is not yet implemented.</p>
+            </section>
+
+            <!-- Red Packet -->
+            <section id="red-packet" class="doc-section">
+                <h2>Red Packet</h2>
+                <p><em>Coming soon.</em> This feature is not yet implemented.</p>
+            </section>
+
+            <!-- Share -->
+            <section id="share" class="doc-section">
+                <h2>Share</h2>
+                <p><em>Coming soon.</em> This feature is not yet implemented.</p>
+            </section>
+
+            <!-- Timestamp -->
+            <section id="timestamp" class="doc-section">
+                <h2>Timestamp</h2>
+                <p><em>Coming soon.</em> This feature is not yet implemented.</p>
+            </section>
+
+            <!-- Voice Message -->
+            <section id="voice-message" class="doc-section">
+                <h2>Voice Message</h2>
+                <p><em>Coming soon.</em> This feature is not yet implemented.</p>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <p>Documentation for the <strong>Dialogue formatter</strong> · Built for <i>loveanddeepspace.wiki.gg</i></p>
+    </footer>
+
+</div>
+
+<script src="docs.js"></script>
+</body>
+</html>

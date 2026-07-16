@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Input · Documentation · loveanddeepspace.wiki.gg Script Formatter</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="container">
+
+    <header style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation">☰</button>
+        <div>
+            <h1 style="font-size: 1.5rem; margin-bottom: 0;">📖 Player Input</h1>
+            <p style="font-size: 0.9rem; color: var(--text-2); margin-top: 0.1rem;">Interactive elements for player choices and interactions.</p>
+        </div>
+    </header>
+
+    <div class="docs-wrapper" id="docsWrapper">
+
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <nav class="docs-sidebar" id="docsSidebar" aria-label="Navigation">
+            <div class="sidebar-group-label">Getting Started</div>
+            <a href="index.html" class="sidebar-link">Overview</a>
+
+            <div class="sidebar-group-label">Basic</div>
+
+            <details class="sidebar-category" open>
+                <summary>General</summary>
+                <div class="category-links">
+                    <a href="general_formats.html#script-block" class="sidebar-link sub">Script Block</a>
+                    <a href="general_formats.html#dialogue" class="sidebar-link sub">Dialogue</a>
+                    <a href="general_formats.html#heading" class="sidebar-link sub">Heading</a>
+                    <a href="general_formats.html#narration" class="sidebar-link sub">Narration</a>
+                    <a href="general_formats.html#quote" class="sidebar-link sub">Quote</a>
+                    <a href="general_formats.html#script-type" class="sidebar-link sub">Script Type</a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Phone</summary>
+                <div class="category-links">
+                    <a href="phone_formats.html#phone-block" class="sidebar-link sub">Phone Block</a>
+                    <a href="phone_formats.html#emoji" class="sidebar-link sub">Emoji</a>
+                    <a href="phone_formats.html#animated-emoji" class="sidebar-link sub">Animated Emoji</a>
+                    <a href="phone_formats.html#poke" class="sidebar-link sub coming-soon">Poke <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#red-packet" class="sidebar-link sub coming-soon">Red Packet <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#share" class="sidebar-link sub coming-soon">Share <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#timestamp" class="sidebar-link sub coming-soon">Timestamp <span class="badge">soon</span></a>
+                    <a href="phone_formats.html#voice-message" class="sidebar-link sub coming-soon">Voice Message <span class="badge">soon</span></a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Player Input</summary>
+                <div class="category-links">
+                    <a href="input_formats.html#choice" class="sidebar-link sub">Choice</a>
+                    <a href="input_formats.html#interaction" class="sidebar-link sub">Interaction</a>
+                </div>
+            </details>
+
+            <div class="sidebar-group-label">Advanced</div>
+
+            <details class="sidebar-category" open>
+                <summary>Audio/Visual Cues</summary>
+                <div class="category-links">
+                    <a href="cues_formats.html#context" class="sidebar-link sub">Context</a>
+                    <a href="cues_formats.html#overlay" class="sidebar-link sub coming-soon">Overlay <span class="badge">soon</span></a>
+                    <a href="cues_formats.html#location" class="sidebar-link sub coming-soon">Location <span class="badge">soon</span></a>
+                    <a href="cues_formats.html#visual" class="sidebar-link sub coming-soon">Visual <span class="badge">soon</span></a>
+                </div>
+            </details>
+
+            <details class="sidebar-category" open>
+                <summary>Navigation</summary>
+                <div class="category-links">
+                    <a href="navigation_formats.html#id" class="sidebar-link sub coming-soon">ID <span class="badge">soon</span></a>
+                    <a href="navigation_formats.html#break" class="sidebar-link sub">Break</a>
+                </div>
+            </details>
+
+            <div style="margin-top: 1rem; padding-top: 0.5rem; border-top: 1px solid var(--border);">
+                <a href="../index.html" class="sidebar-link" style="font-weight: 500;">← Back to formatter</a>
+            </div>
+        </nav>
+
+        <main class="docs-content">
+            <div class="breadcrumb">
+                <a href="index.html">Docs</a>
+                <span class="separator">/</span>
+                <span class="current" id="breadcrumbCurrent">Player Input</span>
+            </div>
+
+            <!-- Choice -->
+            <section id="choice" class="doc-section">
+                <h2>Choice</h2>
+                <p>Use <code>??? ... ???</code> to create a tabbed choice menu. Format:</p>
+                <ul>
+                    <li><code>???</code> – start of choice block</li>
+                    <li><code>? Choice Title</code> – tab title, followed by content</li>
+                    <li><code>???</code> – end of choice block</li>
+                </ul>
+                <p>There is no limit on the amount of choices that can be added but usually there will be no more than three.</p>
+
+                <div class="example">???<br><i>? Help Rafayel</i><br>Rafayel: Thank you for helping me!<br>Zayne: That was a wise choice.<br><i>? Ignore Rafayel</i><br>Rafayel: Why didn't you help me?<br>Sylus: That was a mistake.<br>???</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">&lt;tabber&gt;<br>|-|Help Rafayel =<br>{{Script/dialogue|Rafayel|Thank you for helping me!}}<br>{{Script/dialogue|Zayne|That was a wise choice.}}<br>|-|Ignore Rafayel =<br>{{Script/dialogue|Rafayel|Why didn't you help me?}}<br>{{Script/dialogue|Sylus|That was a mistake.}}<br>&lt;/tabber&gt;</div>
+            </section>
+
+            <!-- Interaction -->
+            <section id="interaction" class="doc-section">
+                <h2>Interaction</h2>
+                <p>Use <code>!!</code> to create interactive elements. Format: <code>!! Type - Text &lt;optional keys&gt;</code>.</p>
+                <ul>
+                    <li><code>Type</code> – name of the interaction type (e.g., Click, Tap, Swipe, Drag, Arrow)</li>
+                    <li><code>Text</code> – adds text below the interaction icon (optional)</li>
+                    <li><code>optional keys</code> (optional) – inside <code>&lt; &gt;</code>:
+                        <ul>
+                            <li><code>Flip</code> → <code>Flip=true</code></li>
+                            <li><code>Rotate number</code> (1–360) → <code>Rotate=rotate number</code></li>
+                            <li><code>Rotate number//Flip</code> → <code>Rotate=rotate number|Flip=true</code></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <details>
+                    <summary>Show Interaction Type List</summary>
+                    <div class="details-content">
+                        <table class="emoji">
+                            <tbody>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Tap.png" alt="Tap" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Tap_Multi.png" alt="Tap Multi" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Tap_Multi_Timed.png" alt="Tap Multi Timed" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Timed.png" alt="Timed" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Tap</code></td>
+                                    <td><code>Tap Multi</code></td>
+                                    <td><code>Tap Multi Timed</code></td>
+                                    <td><code>Timed</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Arrow.png" alt="Arrow" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Arrow_Timed.png" alt="Arrow Timed" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Arrow_Curve.png" alt="Arrow Curve" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Arrow_Curve_Timed.png" alt="Arrow Curve Timed" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Arrow</code></td>
+                                    <td><code>Arrow Timed</code></td>
+                                    <td><code>Arrow Curve</code></td>
+                                    <td><code>Arrow Curve Timed</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Camera.png" alt="Camera" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Talk.png" alt="Talk" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Talk_Timed.png" alt="Talk Timed" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Voice.png" alt="Voice" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Camera</code></td>
+                                    <td><code>Talk</code></td>
+                                    <td><code>Talk Timed</code></td>
+                                    <td><code>Voice</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Touch.png" alt="Touch" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Trace.png" alt="Trace" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Hold.png" alt="Hold" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Rotate.png" alt="Rotate" width="48" height="48"></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Touch</code></td>
+                                    <td><code>Trace</code></td>
+                                    <td><code>Hold</code></td>
+                                    <td><code>Rotate</code></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Swipe.png" alt="Swipe" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Swipe_Timed.png" alt="Swipe Timed" width="48" height="48"></td>
+                                    <td><img src="https://loveanddeepspace.wiki.gg/images/QTE_Breathe.png" alt="Breathe" width="48" height="48"></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><code>Swipe</code></td>
+                                    <td><code>Swipe Timed</code></td>
+                                    <td><code>Breathe</code></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </details>
+
+                <h3>Basic interaction</h3>
+                <code>!! Type</code> → <code>{{Script/interaction|Type}}</code>
+                <div class="example">!! Arrow</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Arrow}}</div>
+
+                <h3>Interaction with text</h3>
+                <code>!! Type - Text</code> → <code>{{Script/interaction|Type|Text}}</code>
+                <div class="example">!! Tap - Tap to continue</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Tap|Tap to continue}}</div>
+
+                <h3>Interaction with rotate</h3>
+                <code>!! Type &lt;Rotate number&gt;</code> → <code>{{Script/interaction|Type|Rotate=Rotate number}}</code>
+                <div class="example">!! Swipe - Swipe left &lt;90&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Swipe|Swipe left|Rotate=90}}</div>
+
+                <h3>Interaction with flip</h3>
+                <code>!! Type &lt;Flip&gt;</code> → <code>{{Script/interaction|Type|Flip=true}}</code>
+                <div class="example">!! Arrow Curve - Drag object &lt;flip&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Arrow Curve|Drag object|Flip=true}}</div>
+
+                <h3>Interaction with rotate and flip</h3>
+                <code>!! Type &lt;Rotate number//Flip&gt;</code> → <code>{{Script/interaction|Type|Rotate=Rotate number|Flip=true}}</code>
+                <div class="example">!! Tap - Tap here &lt;45//flip&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">{{Script/interaction|Tap|Tap here|Rotate=45|Flip=true}}</div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer class="docs-footer">
+        <p>Documentation for the <strong>Dialogue formatter</strong> · Built for <i>loveanddeepspace.wiki.gg</i></p>
+    </footer>
+
+</div>
+
+<script src="docs.js"></script>
+</body>
+</html>
