@@ -97,22 +97,24 @@
             <section id="script-block" class="doc-section">
                 <h2>Script Block</h2>
                 <p>Wrap your script with <code>&lt;Script&gt;</code> to add <code>{{Script/start}}</code> and <code>{{Script/end}}</code>.</p>
-                <p>You can also include keys inside the block.</p>
-                <p>Only the following keys are allowed:</p>
+                <ul>
+                    <li>If you leave a key out, the template just falls back to its default value (e.g., <code>Toggle</code> defaults to <code>true</code>, <code>Hide Title</code> defaults to <code>false</code>, and <code>Scheme</code> just matches your wiki's theme and script theme).</li>
+                    <li>If you <em>do</em> include a key, make sure its value follows the format below. Also, you don't have to list every single one—anything you skip will just be set to default anyway.</li>
+                </ul>
 
                 <table>
                     <thead>
-                        <tr><th>#</th><th>Keys</th><th>Description</th></tr>
+                        <tr><th>#</th><th>Key</th><th>Valid Values (if included)</th><th>Description</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>1</td><td><code>Title</code></td><td>Adds a title to the script.</td></tr>
-                        <tr><td>2</td><td><code>Hide Title</code></td><td>Must be <code>Yes</code> (for <code>true</code>) or <code>No</code> (for <code>false</code>).</td></tr>
-                        <tr><td>3</td><td><code>Toggle</code></td><td>Must be <code>Yes</code> (for <code>true</code>), <code>No</code> (for <code>false</code>), or <code>Collapsed</code>.</td></tr>
-                        <tr><td>4</td><td><code>Scheme</code></td><td>Must be <code>Dark</code> or <code>Light</code>.</td></tr>
-                        <tr><td>5</td><td><code>Theme</code></td><td>Sets the theme styling.</td></tr>
-                        <tr><td>6</td><td><code>Previous Chapters</code></td><td>Must be in the format: <code>Link 1,, Display Name 1;; Link 2,, Display Name 2</code></td></tr>
-                        <tr><td>7</td><td><code>Next Chapters</code></td><td>Must be in the format: <code>Link 1,, Display Name 1;; Link 2,, Display Name 2</code></td></tr>
-                        <tr><td>8</td><td><code>Edit Script</code></td><td>Override the link to where the script can be edited.</td></tr>
+                        <tr><td>1</td><td><code>Title</code></td><td>Any text</td><td>Adds a title to the script.</td></tr>
+                        <tr><td>2</td><td><code>Hide Title</code></td><td><code>Yes</code> for <code>true</code> or <code>No</code> for <code>false</code></td><td>Hides the title if set to <code>Yes</code>.</td></tr>
+                        <tr><td>3</td><td><code>Toggle</code></td><td><code>Yes</code> for <code>true</code>, <code>No</code> for <code>false</code>, or <code>Collapsed</code></td><td>Controls whether the script is collapsible.</td></tr>
+                        <tr><td>4</td><td><code>Scheme</code></td><td><code>Dark</code> or <code>Light</code></td><td>Forces a color scheme; if omitted, the wiki theme is used.</td></tr>
+                        <tr><td>5</td><td><code>Theme</code></td><td>Any text</td><td>Sets a custom theme name for event scripts.</td></tr>
+                        <tr><td>6</td><td><code>Previous Chapters</code></td><td><code>Link 1,, Display 1;; Link 2,, Display 2</code></td><td>Adds previous chapter navigation links.</td></tr>
+                        <tr><td>7</td><td><code>Next Chapters</code></td><td><code>Link 1,, Display 1;; Link 2,, Display 2</code></td><td>Adds next chapter navigation links.</td></tr>
+                        <tr><td>8</td><td><code>Edit Script</code></td><td>Any text (URL)</td><td>Overrides the default edit link.</td></tr>
                     </tbody>
                 </table>
 

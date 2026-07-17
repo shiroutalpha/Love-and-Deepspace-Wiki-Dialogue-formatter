@@ -95,18 +95,29 @@
 
             <!-- Choice -->
             <section id="choice" class="doc-section">
-                <h2>Choice</h2>
-                <p>Use <code>??? ... ???</code> to create a tabbed choice menu. Format:</p>
-                <ul>
-                    <li><code>???</code> – start of choice block</li>
-                    <li><code>? Choice Title</code> – tab title, followed by content</li>
-                    <li><code>???</code> – end of choice block</li>
-                </ul>
-                <p>There is no limit on the amount of choices that can be added but usually there will be no more than three.</p>
+                <h2>Choice (Tabbed Menu)</h2>
+                <p>Use <code>&lt;choice&gt;</code> and <code>&lt;/choice&gt;</code> to create a tabbed choice menu. Inside, each tab is introduced with <code>? Title</code>.</p>
 
-                <div class="example">???<br><i>? Help Rafayel</i><br>Rafayel: Thank you for helping me!<br>Zayne: That was a wise choice.<br><i>? Ignore Rafayel</i><br>Rafayel: Why didn't you help me?<br>Sylus: That was a mistake.<br>???</div>
+                <ul>
+                    <li><code>&lt;choice&gt;</code> – start of choice block</li>
+                    <li><code>? Choice Title</code> – tab title, followed by its content (any valid script lines)</li>
+                    <li><code>&lt;/choice&gt;</code> – end of choice block</li>
+                </ul>
+
+                <h3>Basic choice</h3>
+                <div class="example">&lt;choice&gt;<br>? Help Rafayel<br>Rafayel: Thank you for helping me!<br>Zayne: That was a wise choice.<br>? Ignore Rafayel<br>Rafayel: Why didn't you help me?<br>Sylus: That was a mistake.<br>&lt;/choice&gt;</div>
                 <div class="result-label">Result ▼</div>
                 <div class="example-result">&lt;tabber&gt;<br>|-|Help Rafayel =<br>{{Script/dialogue|Rafayel|Thank you for helping me!}}<br>{{Script/dialogue|Zayne|That was a wise choice.}}<br>|-|Ignore Rafayel =<br>{{Script/dialogue|Rafayel|Why didn't you help me?}}<br>{{Script/dialogue|Sylus|That was a mistake.}}<br>&lt;/tabber&gt;</div>
+
+                <h3>Nested choices</h3>
+                <p>Choices can be nested inside other choices, phones, or any block.</p>
+                <div class="example">&lt;choice&gt;<br>? Outer option<br>Xavier: This is outer.<br>&lt;choice&gt;<br>? Inner A<br>Zayne: Inner A.<br>? Inner B<br>Rafayel: Inner B.<br>&lt;/choice&gt;<br>? Another outer<br>Sylus: Another outer.<br>&lt;/choice&gt;</div>
+                <div class="result-label">Result ▼</div>
+                <div class="example-result">&lt;tabber&gt;<br>|-|Outer option =<br>{{Script/dialogue|Xavier|This is outer.}}<br>&lt;tabber&gt;<br>|-|Inner A =<br>{{Script/dialogue|Zayne|Inner A.}}<br>|-|Inner B =<br>{{Script/dialogue|Rafayel|Inner B.}}<br>&lt;/tabber&gt;<br>|-|Another outer =<br>{{Script/dialogue|Sylus|Another outer.}}<br>&lt;/tabber&gt;</div>
+
+                <div class="note">
+                    <strong>Note:</strong> All content inside a tab is processed recursively, so you can freely mix dialogues, headings, narrations, interactions, and even phone blocks inside a choice tab.
+                </div>
             </section>
 
             <!-- Interaction -->

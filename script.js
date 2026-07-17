@@ -90,8 +90,9 @@ const SCRIPT_NOBLOCK = /^\s*<Script>\s*$/i;
 const SCRIPT_START = /^\s*<Script\b/i;
 const SCRIPT_END = /\s*>\s*$/;
 
-const CHOICE = /^\s*\?\?\?\s*$/;
-const CHOICE_OPTION = /^\?\s*/;
+const CHOICE_START = /^\s*<choice>\s*$/i;
+const CHOICE_END   = /^\s*<\/choice>\s*$/i;
+const CHOICE_TAB   = /^\?\s*(.*)$/;
 
 const PHONE_START = /^\s*@\s*(voice|video|text\s+message)\s*(?:-\s*(.+?))?\s*$/i;
 const PHONE_END = /^\s*@@\s*$/;
@@ -168,6 +169,11 @@ function formatDialogue(character, dialogue, extras = {}) {
 function convertLine(line, isFailedScriptLine) {
     if (isFailedScriptLine) return { out: line, converted: false, blank: false };
     if (line.trim() === '') return { out: '', converted: false, blank: true };
+
+    if (line.match(CHOICE_START) || line.match(CHOICE_END) || line.match(CHOICE_TAB) ||
+        line.match(PHONE_START) || line.match(PHONE_END)) {
+        return { out: line, converted: true, blank: false };
+    }
 
     const interactionMatch = line.match(INTERACTION);
     if (interactionMatch) {
@@ -377,19 +383,191 @@ function convertLine(line, isFailedScriptLine) {
     return { out: line, converted: false };
 }
 
+function processLines(lines, start = 0) {
+    const output = [];
+    let i = start;
+    while (i < lines.length) {
+        const line = lines[i];
+
+        if (line.match(NARRATION_LARGE)) {
+            const texts = [];
+            while (i < lines.length && lines[i].match(NARRATION_LARGE)) {
+                const match = lines[i].match(NARRATION_LARGE);
+                if (match) {
+                    texts.push(lines[i].replace(NARRATION_LARGE, '').trim());
+                }
+                i++;
+            }
+            if (texts.length > 0) {
+                output.push(`{{Script/narration large|${texts.join(';;')}}}`);
+            }
+            continue;
+        }
+
+        if (line.match(CHOICE_START)) {
+            const result = parseChoice(lines, i);
+            output.push(...result.output);
+            i = result.nextIndex;
+            continue;
+        }
+
+        if (line.match(PHONE_START)) {
+            const result = parsePhone(lines, i);
+            output.push(...result.output);
+            i = result.nextIndex;
+            continue;
+        }
+
+        const converted = convertLine(line, false);
+        if (!converted.blank) {
+            output.push(converted.out);
+        }
+        i++;
+    }
+    return { output, nextIndex: i };
+}
+
+function parseChoice(lines, startIdx) {
+    let i = startIdx + 1;
+    let depth = 1;
+    const contentLines = [];
+
+    while (i < lines.length) {
+        const line = lines[i];
+        if (line.match(CHOICE_START)) {
+            depth++;
+        } else if (line.match(CHOICE_END)) {
+            depth--;
+            if (depth === 0) {
+                i++;
+                break;
+            }
+        }
+        if (depth > 0) {
+            contentLines.push(line);
+        }
+        i++;
+    }
+
+    if (depth !== 0) {
+        contentLines.length = 0;
+        for (let j = startIdx + 1; j < lines.length; j++) {
+            contentLines.push(lines[j]);
+        }
+        i = lines.length;
+    }
+
+    const tabs = [];
+    let currentTitle = null;
+    let currentContent = [];
+    let nestedDepth = 0;
+
+    for (let j = 0; j < contentLines.length; j++) {
+        const line = contentLines[j];
+
+        if (line.match(CHOICE_START)) nestedDepth++;
+        else if (line.match(CHOICE_END)) nestedDepth--;
+
+        if (nestedDepth === 0) {
+            const tabMatch = line.match(CHOICE_TAB);
+            if (tabMatch) {
+                if (currentTitle !== null) {
+                    tabs.push({
+                        title: currentTitle,
+                        content: currentContent.join('\n')
+                    });
+                }
+                currentTitle = tabMatch[1].trim();
+                currentContent = [];
+                continue;
+            }
+        }
+
+        if (currentTitle !== null) {
+            currentContent.push(line);
+        }
+    }
+
+    if (currentTitle !== null) {
+        tabs.push({
+            title: currentTitle,
+            content: currentContent.join('\n')
+        });
+    }
+
+    if (tabs.length === 0) {
+        tabs.push({
+            title: '',
+            content: contentLines.join('\n')
+        });
+    }
+
+    const tabOutput = ['<tabber>'];
+    for (const tab of tabs) {
+        const tabLines = tab.content.split('\n');
+        const processed = processLines(tabLines, 0);
+        const innerOutput = processed.output;
+        tabOutput.push(`|-|${tab.title} =`);
+        if (innerOutput.length === 0) {
+            tabOutput.push('');
+        } else {
+            tabOutput.push(...innerOutput);
+        }
+    }
+    tabOutput.push('</tabber>');
+
+    return { output: tabOutput, nextIndex: i };
+}
+
+function parsePhone(lines, startIdx) {
+    const startLine = lines[startIdx];
+    const phoneMatch = startLine.match(PHONE_START);
+    if (!phoneMatch) {
+        return { output: [startLine], nextIndex: startIdx + 1 };
+    }
+
+    const typeRaw = phoneMatch[1].toLowerCase();
+    const type = PHONE_TYPE[typeRaw];
+    let name = phoneMatch[2] ? phoneMatch[2].trim() : '';
+
+    let endIdx = startIdx + 1;
+    while (endIdx < lines.length) {
+        if (lines[endIdx].match(PHONE_END)) {
+            break;
+        }
+        endIdx++;
+    }
+
+    const contentLines = [];
+    for (let j = startIdx + 1; j < endIdx; j++) {
+        contentLines.push(lines[j]);
+    }
+
+    const processed = processLines(contentLines, 0);
+    const dialogueContent = processed.output.join('\n');
+
+    let phoneOut = `{{Script/phone|${type}`;
+    if (name) {
+        phoneOut += `|${name}`;
+    }
+    if (dialogueContent) {
+        phoneOut += `| Dialogue =\n${dialogueContent}\n}}`;
+    } else {
+        phoneOut += `| Dialogue =}}`;
+    }
+
+    const nextIdx = (endIdx < lines.length && lines[endIdx].match(PHONE_END)) ? endIdx + 1 : endIdx;
+
+    return { output: [phoneOut], nextIndex: nextIdx };
+}
+
 function convert() {
     const raw = document.getElementById('input').value;
     const lines = raw.split('\n');
     const outDiv = document.getElementById('output');
 
-    const isScriptBlockLine = new Array(lines.length).fill(false);
+    const isScriptLine = new Array(lines.length).fill(false);
     const isFailedScriptLine = new Array(lines.length).fill(false);
-    const isChoiceBlockLine = new Array(lines.length).fill(false);
-    const isPhoneBlockLine = new Array(lines.length).fill(false);
-
-    const choiceOutputs = [];
-    const phoneOutputs = [];
-
     let scriptParams = null;
     let hasScriptBlock = false;
 
@@ -399,7 +577,7 @@ function convert() {
 
         if (SCRIPT_NOBLOCK.test(line)) {
             hasScriptBlock = true;
-            isScriptBlockLine[i] = true;
+            isScriptLine[i] = true;
             i++;
             continue;
         }
@@ -468,7 +646,7 @@ function convert() {
                 }
                 if (valid) {
                     for (let idx = blockStartIdx; idx <= j; idx++) {
-                        isScriptBlockLine[idx] = true;
+                        isScriptLine[idx] = true;
                     }
                     scriptParams = params;
                     hasScriptBlock = true;
@@ -488,267 +666,15 @@ function convert() {
         i++;
     }
 
-    i = 0;
-    while (i < lines.length) {
-        const line = lines[i];
-        if (CHOICE.test(line) && !isScriptBlockLine[i] && !isFailedScriptLine[i]) {
-            const startIdx = i;
-            let j = i + 1;
-            let foundEnd = false;
-            while (j < lines.length) {
-                if (CHOICE.test(lines[j]) && !isScriptBlockLine[j] && !isFailedScriptLine[j]) {
-                    foundEnd = true;
-                    break;
-                }
-                j++;
-            }
-            if (foundEnd) {
-                const blockLines = lines.slice(startIdx + 1, j);
-                const tabs = [];
-                let currentTitle = null;
-                let currentContent = [];
-                for (let k = 0; k < blockLines.length; k++) {
-                    const bline = blockLines[k];
-                    const trimmed = bline.trim();
-                    if (CHOICE_OPTION.test(trimmed)) {
-                        if (currentTitle !== null) {
-                            tabs.push({ title: currentTitle, content: currentContent.join('\n') });
-                        }
-                        currentTitle = trimmed.replace(CHOICE_OPTION, '').trim();
-                        currentContent = [];
-                    } else {
-                        if (currentTitle !== null) {
-                            currentContent.push(bline);
-                        }
-                    }
-                }
-                if (currentTitle !== null) {
-                    tabs.push({ title: currentTitle, content: currentContent.join('\n') });
-                }
-
-                let outputLines = ['<tabber>'];
-                for (const tab of tabs) {
-                    outputLines.push(`|-|${tab.title} =`);
-                    if (tab.content) {
-                        const contentLines = tab.content.split('\n');
-                        for (const cline of contentLines) {
-                            if (cline.trim() === '') {
-                                outputLines.push('');
-                                continue;
-                            }
-                            const result = convertLine(cline, false);
-                            if (result.converted && !result.blank) {
-                                outputLines.push(result.out);
-                            } else {
-                                outputLines.push(cline);
-                            }
-                        }
-                    }
-                }
-                outputLines.push('</tabber>');
-
-                for (let idx = startIdx; idx <= j; idx++) {
-                    isChoiceBlockLine[idx] = true;
-                }
-                choiceOutputs.push({ startIdx, endIdx: j, outputLines });
-                i = j + 1;
-                continue;
-            }
+    const contentLines = [];
+    for (let idx = 0; idx < lines.length; idx++) {
+        if (!isScriptLine[idx] && !isFailedScriptLine[idx]) {
+            contentLines.push(lines[idx]);
         }
-        i++;
     }
 
-    i = 0;
-    while (i < lines.length) {
-        const line = lines[i];
-        const phoneMatch = line.match(PHONE_START);
-        if (phoneMatch && !isScriptBlockLine[i] && !isFailedScriptLine[i] && !isChoiceBlockLine[i]) {
-            const typeRaw = phoneMatch[1].toLowerCase();
-            const type = PHONE_TYPE[typeRaw];
-            let name = phoneMatch[2] ? phoneMatch[2].trim() : '';
-            if (name === '') name = null;
-
-            const startIdx = i;
-            let j = i + 1;
-            let foundEnd = false;
-            while (j < lines.length) {
-                if (PHONE_END.test(lines[j]) && !isScriptBlockLine[j] && !isFailedScriptLine[j] && !isChoiceBlockLine[j]) {
-                    foundEnd = true;
-                    break;
-                }
-                j++;
-            }
-            if (foundEnd) {
-                const blockLines = lines.slice(startIdx + 1, j);
-                const convertedContent = [];
-                for (const cline of blockLines) {
-                    if (cline.trim() === '') {
-                        convertedContent.push('');
-                        continue;
-                    }
-                    const result = convertLine(cline, false);
-                    if (result.converted && !result.blank) {
-                        convertedContent.push(result.out);
-                    } else {
-                        convertedContent.push(cline);
-                    }
-                }
-                const dialogueContent = convertedContent.join('\n');
-
-                let phoneOut = `{{Script/phone|${type}`;
-                if (name) {
-                    phoneOut += `|${name}`;
-                }
-                if (dialogueContent) {
-                    phoneOut += `| Dialogue =\n${dialogueContent}\n}}`;
-                } else {
-                    phoneOut += `| Dialogue =}}`;
-                }
-
-                for (let idx = startIdx; idx <= j; idx++) {
-                    isPhoneBlockLine[idx] = true;
-                }
-                phoneOutputs.push({ startIdx, endIdx: j, outputLines: [phoneOut] });
-                i = j + 1;
-                continue;
-            }
-        }
-        i++;
-    }
-
-    const processedLines = [];
-    let idx = 0;
-    while (idx < lines.length) {
-        if (isPhoneBlockLine[idx]) {
-            const phone = phoneOutputs.find(p => idx >= p.startIdx && idx <= p.endIdx);
-            if (phone) {
-                for (const outLine of phone.outputLines) {
-                    processedLines.push({
-                        line: outLine,
-                        converted: true,
-                        blank: false,
-                        isScript: false,
-                        isFailed: false
-                    });
-                }
-                idx = phone.endIdx + 1;
-                continue;
-            }
-        }
-
-        if (isChoiceBlockLine[idx]) {
-            const choice = choiceOutputs.find(c => idx >= c.startIdx && idx <= c.endIdx);
-            if (choice) {
-                for (const outLine of choice.outputLines) {
-                    processedLines.push({
-                        line: outLine,
-                        converted: true,
-                        blank: false,
-                        isScript: false,
-                        isFailed: false
-                    });
-                }
-                idx = choice.endIdx + 1;
-                continue;
-            }
-        }
-
-        if (NARRATION_LARGE.test(lines[idx]) && !isScriptBlockLine[idx] && !isFailedScriptLine[idx] && !isChoiceBlockLine[idx] && !isPhoneBlockLine[idx]) {
-            const texts = [];
-            while (idx < lines.length && NARRATION_LARGE.test(lines[idx]) && !isScriptBlockLine[idx] && !isFailedScriptLine[idx] && !isChoiceBlockLine[idx] && !isPhoneBlockLine[idx]) {
-                const match = lines[idx].match(NARRATION_LARGE);
-                if (match) {
-                    texts.push(lines[idx].replace(NARRATION_LARGE, '').trim());
-                }
-                idx++;
-            }
-            if (texts.length > 0) {
-                processedLines.push({
-                    line: `{{Script/narration large|${texts.join(';;')}}}`,
-                    converted: true,
-                    blank: false,
-                    isScript: false,
-                    isFailed: false
-                });
-            }
-            continue;
-        }
-
-        if (isScriptBlockLine[idx]) {
-            processedLines.push({
-                line: lines[idx],
-                converted: true,
-                blank: false,
-                isScript: true,
-                isFailed: false
-            });
-        } else if (isFailedScriptLine[idx]) {
-            processedLines.push({
-                line: lines[idx],
-                converted: false,
-                blank: false,
-                isScript: false,
-                isFailed: true
-            });
-        } else {
-            const result = convertLine(lines[idx], false);
-            processedLines.push({
-                line: result.out,
-                converted: result.converted,
-                blank: result.blank,
-                isScript: false,
-                isFailed: false
-            });
-        }
-        idx++;
-    }
-
-    function updateBackdrop() {
-        const backdrop = document.getElementById('input-backdrop');
-        backdrop.innerHTML = lines.map((line, idx) => {
-            const escaped = line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-            if (isScriptBlockLine[idx] || isChoiceBlockLine[idx] || isPhoneBlockLine[idx]) {
-                return escaped + '\n';
-            } else if (isFailedScriptLine[idx]) {
-                return `<span class="bad">${escaped}</span>\n`;
-            } else {
-                if (NARRATION_LARGE.test(line)) {
-                    return escaped + '\n';
-                }
-                const result = convertLine(line, false);
-                if (!result.converted && !result.blank) {
-                    return `<span class="bad">${escaped}</span>\n`;
-                } else {
-                    return escaped + '\n';
-                }
-            }
-        }).join('');
-    }
-    updateBackdrop();
-
-    if (!raw) {
-        outDiv.innerHTML = '<span class="placeholder">Formatted output will appear here…</span>';
-        document.getElementById('status').className = 'status';
-        return;
-    }
-
-    let convertedCount = 0, skipped = 0;
-    const skippedLines = [], outLines = [];
-
-    for (const p of processedLines) {
-        if (p.isScript || p.isFailed) {
-            if (p.isScript) convertedCount++;
-            if (p.isFailed) {
-                skipped++;
-                skippedLines.push(p.line);
-            }
-            continue;
-        }
-        if (p.blank) continue;
-        outLines.push(p.line);
-        if (p.converted) convertedCount++;
-        else { skipped++; skippedLines.push(p.line); }
-    }
+    const result = processLines(contentLines, 0);
+    let outLines = result.output;
 
     if (hasScriptBlock) {
         let startTag = '{{Script/start}}';
@@ -763,20 +689,41 @@ function convert() {
         outLines.push('{{Script/end}}');
     }
 
+    if (!raw.trim()) {
+        outDiv.innerHTML = '<span class="placeholder">Formatted output will appear here…</span>';
+        document.getElementById('status').className = 'status';
+        return;
+    }
+
     outDiv.innerHTML = outLines.map((line) => {
-        const escaped = line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        const escaped = line.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         return `<span class="line">${escaped || '&#8203;'}</span>`;
     }).join('');
 
     const status = document.getElementById('status');
-    if (skipped === 0) {
-        status.className = 'status show ok';
-        status.innerHTML = `${convertedCount} line${convertedCount !== 1 ? 's' : ''} converted successfully.`;
-    } else {
-        status.className = 'status show warning';
-        const preview = skippedLines.slice(0,5).map(l => `  ${escapeHtml(l.slice(0,60))}${l.length>60?'…':''}`).join('<br>');
-        status.innerHTML = `${convertedCount} line${convertedCount !== 1 ? 's' : ''} converted successfully &mdash; ${skipped} line${skipped!==1?'s':''} had no recognisable format and were left unchanged:<div class="skipped-list">${preview}</div>`;
-    }
+    status.className = 'status show ok';
+    status.innerHTML = `${outLines.length} line${outLines.length !== 1 ? 's' : ''} generated.`;
+
+    updateBackdrop(lines, isScriptLine, isFailedScriptLine);
+}
+
+function updateBackdrop(lines, isScriptLine, isFailedScriptLine) {
+    const backdrop = document.getElementById('input-backdrop');
+    backdrop.innerHTML = lines.map((line, idx) => {
+        const escaped = line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        if (isScriptLine[idx] || isFailedScriptLine[idx]) {
+            if (isFailedScriptLine[idx]) {
+                return `<span class="bad">${escaped}</span>\n`;
+            }
+            return escaped + '\n';
+        }
+        const result = convertLine(line, false);
+        if (!result.converted && !result.blank) {
+            return `<span class="bad">${escaped}</span>\n`;
+        } else {
+            return escaped + '\n';
+        }
+    }).join('');
 }
 
 function copyOutput() {
