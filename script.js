@@ -71,6 +71,22 @@ const ANIMATED_EMOJI_LIST = {
     ]
 };
 
+const OVERLAY_COLORS = ['Flashback', 'White', 'Gray', 'Black', 'Red', 'Yellow', 'Blue'];
+const OVERLAY_EFFECTS = ['Dark Feathers', 'Embers', 'Grain', 'Ice', 'Rain', 'Resonance', 'Snow'];
+const OVERLAY_SPECIAL_TYPES = {
+    'Flashbacks': { Color: 'Flashback', Effect: 'Grain' },
+    'Rainy': { Color: 'Gray', Effect: 'Rain' },
+    'Snowy': { Color: 'Gray', Effect: 'Snow' },
+    'Fire': { Color: 'Red', Effect: 'Embers' },
+    'MC Evol': { Color: 'Yellow', Effect: 'Resonance' },
+    'Xavier Evol': { Special: 'Xavier Evol' },
+    'Zayne Evol': { Color: 'Blue', Effect: 'Ice' },
+    'Zayne Evol (Dark)': { Color: 'Black', Effect: 'Ice' },
+    'Rafayel Evol': { Special: 'Rafayel Evol' },
+    'Sylus Evol': { Color: 'Red', Effect: 'Dark Feathers' },
+    'Caleb Evol': { Special: 'Caleb Evol' }
+};
+
 const INTERACTION_TYPE_LIST = [
     "Tap", "Tap Multi", "Tap Multi Timed",
     "Arrow", "Arrow Timed", "Arrow Curve", "Arrow Curve Timed",
@@ -80,12 +96,6 @@ const INTERACTION_TYPE_LIST = [
     "Hold", "Timed"
 ];
 
-const ANIMATED_EMOJI = new RegExp(`^<(${ANIMATED_PREFIXES.join('|')}):\\s*([^>]+)>$`, 'i');
-
-const DIALOGUE_COVRD = /^([^-]+?)\s*-\s*([^-]+?)\s*(?:\(([^)]+)\))?\s*:\s*(.*)$/;
-const DIALOGUE_EXPR  = /^([^(]+?)\s*\(([^)]+)\)\s*:\s*(.*)$/;
-const DIALOGUE       = /^([^:]+?):\s*(.*)$/;
-
 const SCRIPT_NOBLOCK = /^\s*<Script>\s*$/i;
 const SCRIPT_START = /^\s*<Script\b/i;
 const SCRIPT_END = /\s*>\s*$/;
@@ -94,17 +104,39 @@ const CHOICE_START = /^\s*<choice>\s*$/i;
 const CHOICE_END   = /^\s*<\/choice>\s*$/i;
 const CHOICE_TAB   = /^\?\s*(.*)$/;
 
+const OVERLAY_START = /^\s*<overlay>\s*(.*)$/i;
+const OVERLAY_END = /^\s*<\/overlay>\s*$/i;
+
 const PHONE_START = /^\s*@\s*(voice|video|text\s+message)\s*(?:-\s*(.+?))?\s*$/i;
 const PHONE_END = /^\s*@@\s*$/;
 
+const DIALOGUE_COVRD = /^([^-]+?)\s*-\s*([^-]+?)\s*(?:\(([^)]+)\))?\s*:\s*(.*)$/;
+const DIALOGUE_EXPR  = /^([^(]+?)\s*\(([^)]+)\)\s*:\s*(.*)$/;
+const DIALOGUE       = /^([^:]+?):\s*(.*)$/;
 const HEADING = /^##\s+(.+?)(?:\s*<\s*([^|]+?)\s*>)?$/i;
-const INTERACTION = /^!!\s+([A-Za-z\s]+)(?:\s*-\s*([^<]*?))?(?:\s*<([^>]+)>)?$/;
-const QUOTE = /^\^\s*(.+?)(?:\s*<\s*(.+?)\s*>)?$/;
 const NARRATION = /^>\s*(.+)$/;
 const NARRATION_LARGE = /^\s*>>\s+/;
-const BREAK = /^\s*---\s*$/;
-const CONTEXT = /^\s*<Context(?:\s+([^>]+))?>\s*(.*)$/i;
+const QUOTE = /^\^\s*(.+?)(?:\s*<\s*(.+?)\s*>)?$/;
 const TYPE = new RegExp(`^\\s*<type\\/(${Object.keys(SCRIPT_TYPE).join('|')})>\\s*$`, 'i');
+
+const ANIMATED_EMOJI = new RegExp(`^<(${ANIMATED_PREFIXES.join('|')}):\\s*([^>]+)>$`, 'i');
+const POKE = /^\s*<Poke\s+([^>]+)>\s*$/i;
+const RED_PACKET = /^\s*<Red packet\s*(?:\(([^)]*)\))?\s*(.*?)>\s*$/i;
+const SHARE_PUBLIC = /^\s*<Public Account\s*-\s*(.*?)>(?:\s*#\{(.*?)\})?\s*$/i;
+const SHARE_LINK = /^\s*<Link\s*-\s*(.*?)>\s*$/i;
+const SHARE_IMAGE = /^\s*<Image\s*-\s*(.*?)>\s*$/i;
+const SHARE_PIN = /^\s*<Pin\s*-\s*(.*?)>\s*$/i;
+const VOICE_MESSAGE = /^\s*<Voice message\s*\(([^)]+)\)\s*(.*?)>\s*$/i;
+const TIMESTAMP = /^\s*<Timestamp>\s*(.*)$/i;
+
+const INTERACTION = /^!!\s+([A-Za-z\s]+)(?:\s*-\s*([^<]*?))?(?:\s*<([^>]+)>)?$/;
+
+const CONTEXT = /^\s*<Context(?:\s+([^>]+))?>\s*(.*)$/i;
+const LOCATION = /^\s*<Location\s+(.*?)>\s*$/i;
+const VISUAL = /^\s*\[\[\s*(.*?)\s*\]\]\s*$/i;
+
+const ID = /^\s*<ID\s+#([^>]+)>\s*$/i;
+const BREAK = /^\s*---\s*$/;
 
 function normalizeKey(key) {
     return key.trim().toLowerCase();
@@ -166,13 +198,229 @@ function formatDialogue(character, dialogue, extras = {}) {
     return parts.join('|') + '}}';
 }
 
+function parseRedPacket(dialogue) {
+    const match = dialogue.match(RED_PACKET);
+    if (!match) return null;
+    const inside = match[1] ? match[1].trim() : null;
+    let text = match[2] ? match[2].trim() : '';
+    let amount = null;
+    let currency = null;
+
+    if (inside) {
+        const tokens = inside.split(/\s+/);
+        const first = tokens[0];
+        if (/^[\d,]+$/.test(first)) {
+            amount = first;
+            if (tokens.length > 1) {
+                currency = tokens.slice(1).join(' ');
+            }
+        } else {
+            currency = inside;
+        }
+    }
+
+    return { amount, currency, text };
+}
+
 function convertLine(line, isFailedScriptLine) {
     if (isFailedScriptLine) return { out: line, converted: false, blank: false };
     if (line.trim() === '') return { out: '', converted: false, blank: true };
 
-    if (line.match(CHOICE_START) || line.match(CHOICE_END) || line.match(CHOICE_TAB) ||
+    const timestampMatch = line.match(TIMESTAMP);
+    if (timestampMatch) {
+        const text = timestampMatch[1].trim();
+        return { out: `{{Script/timestamp|${text}}}`, converted: true, blank: false };
+    }
+
+    const locationMatch = line.match(LOCATION);
+    if (locationMatch) {
+        const content = locationMatch[1].trim();
+        let images = '', titles = '', subtitles = '', links = '';
+        let main = content;
+        const hashIndex = content.lastIndexOf('#');
+        if (hashIndex !== -1) {
+            links = content.substring(hashIndex + 1).trim();
+            main = content.substring(0, hashIndex).trim();
+        }
+        const dashIndex = main.indexOf(' - ');
+        if (dashIndex !== -1) {
+            images = main.substring(0, dashIndex).trim();
+            const right = main.substring(dashIndex + 3).trim();
+            const slashIndex = right.indexOf('//');
+            if (slashIndex !== -1) {
+                titles = right.substring(0, slashIndex).trim();
+                subtitles = right.substring(slashIndex + 2).trim();
+            } else {
+                titles = right;
+            }
+        } else {
+            images = main;
+        }
+        let out = `{{Script/location|${titles || ''}|${images}|${links || ''}}`;
+        if (subtitles) out += `|Subtitle=${subtitles}`;
+        out += '}}';
+        return { out, converted: true, blank: false };
+    }
+
+    const idMatch = line.match(ID);
+    if (idMatch) {
+        const id = idMatch[1].trim().replace(/\s+/g, '_');
+        return { out: `{{Script/id|${id}}}`, converted: true, blank: false };
+    }
+
+    const visualMatch = line.match(VISUAL);
+    if (visualMatch) {
+        const content = visualMatch[1].trim();
+        const parts = content.split('|').map(s => s.trim());
+        const fileName = parts.shift();
+        const ext = fileName.split('.').pop().toLowerCase();
+        const validExts = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'webp', 'svg'];
+        if (!validExts.includes(ext)) {
+            return { out: line, converted: false };
+        }
+        let params = { Link: null, Width: null, Frame: null, Border: null };
+        for (const p of parts) {
+            const lower = p.toLowerCase();
+            if (lower.startsWith('frame=')) {
+                params.Frame = p.substring(6).trim();
+            } else if (lower.startsWith('border=')) {
+                const val = p.substring(7).trim().toLowerCase();
+                if (val === 'yes') params.Border = 'true';
+                else if (val === 'no') params.Border = 'false';
+                else return { out: line, converted: false };
+            } else if (/^\d+px$/i.test(p)) {
+                params.Width = p;
+            } else {
+                params.Link = p;
+            }
+        }
+        let out = `{{Script/visual|${fileName}`;
+        if (params.Link) out += `|Link=${params.Link}`;
+        if (params.Width) out += `|Width=${params.Width}`;
+        if (params.Frame) out += `|Frame=${params.Frame}`;
+        if (params.Border) out += `|Border=${params.Border}`;
+        out += '}}';
+        return { out, converted: true, blank: false };
+    }
+
+    if (line.match(OVERLAY_START) || line.match(OVERLAY_END) ||
+        line.match(CHOICE_START) || line.match(CHOICE_END) || line.match(CHOICE_TAB) ||
         line.match(PHONE_START) || line.match(PHONE_END)) {
         return { out: line, converted: true, blank: false };
+    }
+
+    let m = line.match(DIALOGUE_COVRD);
+    if (m) {
+        const character = m[1].trim();
+        const override = m[2].trim();
+        const expression = m[3] ? m[3].trim() : null;
+        let dialogue = m[4].trim();
+        const out = formatDialogue(character, dialogue, { expression, characterOverride: override });
+        return { out: out, converted: true };
+    }
+
+    m = line.match(DIALOGUE_EXPR);
+    if (m) {
+        const character = m[1].trim();
+        const expression = m[2].trim();
+        let dialogue = m[3].trim();
+        const out = formatDialogue(character, dialogue, { expression });
+        return { out: out, converted: true };
+    }
+
+    m = line.match(DIALOGUE);
+    if (m) {
+        const character = m[1].trim();
+        let dialogue = m[2].trim();
+
+        const pokeMatch = dialogue.match(POKE);
+        if (pokeMatch) {
+            const target = pokeMatch[1].trim();
+            return { out: `{{Script/poke|${character}|${target}}}`, converted: true };
+        }
+
+        const rpMatch = dialogue.match(RED_PACKET);
+        if (rpMatch) {
+            const parsed = parseRedPacket(dialogue);
+            if (parsed) {
+                let parts = [`{{Script/red packet|${character}`];
+                if (parsed.text) parts.push(parsed.text);
+                if (parsed.amount) parts.push(`Amount=${parsed.amount}`);
+                if (parsed.currency) parts.push(`Currency=${parsed.currency}`);
+                return { out: parts.join('|') + '}}', converted: true };
+            }
+        }
+
+        const vmMatch = dialogue.match(VOICE_MESSAGE);
+        if (vmMatch) {
+            const length = vmMatch[1].trim();
+            const text = vmMatch[2].trim();
+            return { out: `{{Script/voice message|${character}|${length}\"|${text}}}`, converted: true };
+        }
+
+        const sharePublicMatch = dialogue.match(SHARE_PUBLIC);
+        if (sharePublicMatch) {
+            const postName = sharePublicMatch[1].trim();
+            let linkOverride = sharePublicMatch[2] ? sharePublicMatch[2].trim() : postName;
+            return { 
+                out: `{{Script/share|Type=Public Account|${character}|${linkOverride}|Post Name=${postName}}}`, 
+                converted: true 
+            };
+        }
+
+        const shareLinkMatch = dialogue.match(SHARE_LINK);
+        if (shareLinkMatch) {
+            const links = shareLinkMatch[1].trim();
+            return { 
+                out: `{{Script/share|Type=Link|${character}|${links}}}`, 
+                converted: true 
+            };
+        }
+
+        const shareImageMatch = dialogue.match(SHARE_IMAGE);
+        if (shareImageMatch) {
+            const imageName = shareImageMatch[1].trim();
+            return { 
+                out: `{{Script/share|Type=Image|${character}|${imageName}}}`, 
+                converted: true 
+            };
+        }
+
+        const sharePinMatch = dialogue.match(SHARE_PIN);
+        if (sharePinMatch) {
+            const text = sharePinMatch[1].trim();
+            return { 
+                out: `{{Script/share|Type=Pin|${character}|${text}}}`, 
+                converted: true 
+            };
+        }
+
+        const animatedMatch = dialogue.match(ANIMATED_EMOJI);
+        if (animatedMatch) {
+            const prefix = animatedMatch[1];
+            const suffix = animatedMatch[2].trim();
+            if (!isValidAnimatedEmoji(prefix, suffix)) {
+                return { out: line, converted: false };
+            }
+            const fullTag = `${prefix}: ${suffix}`;
+            return { out: `{{Script/animated emoji|${character}|${fullTag}}}`, converted: true };
+        }
+
+        let hasInvalidEmoji = false;
+        dialogue = dialogue.replace(/<([^:>]+)>/g, function(match, emojiName) {
+            if (EMOJI_LIST.includes(emojiName)) {
+                return `{{Emoji|${emojiName}}}`;
+            } else {
+                hasInvalidEmoji = true;
+                return match;
+            }
+        });
+        if (hasInvalidEmoji) {
+            return { out: line, converted: false };
+        }
+
+        const out = formatDialogue(character, dialogue, {});
+        return { out: out, converted: true };
     }
 
     const interactionMatch = line.match(INTERACTION);
@@ -278,113 +526,11 @@ function convertLine(line, isFailedScriptLine) {
         return { out: `{{Script/type|${type}}}`, converted: true };
     }
 
-    let m = line.match(DIALOGUE_COVRD);
-    if (m) {
-        const character = m[1].trim();
-        const override = m[2].trim();
-        const expression = m[3] ? m[3].trim() : null;
-        let dialogue = m[4].trim();
-
-        const animatedMatch = dialogue.match(ANIMATED_EMOJI);
-        if (animatedMatch) {
-            const prefix = animatedMatch[1];
-            const suffix = animatedMatch[2].trim();
-            if (!isValidAnimatedEmoji(prefix, suffix)) {
-                return { out: line, converted: false };
-            }
-            const fullTag = `${prefix}: ${suffix}`;
-            return { out: `{{Script/animated emoji|${character}|${fullTag}}}`, converted: true };
-        }
-
-        let hasInvalidEmoji = false;
-        dialogue = dialogue.replace(/<([^:>]+)>/g, function(match, emojiName) {
-            if (EMOJI_LIST.includes(emojiName)) {
-                return `{{Emoji|${emojiName}}}`;
-            } else {
-                hasInvalidEmoji = true;
-                return match;
-            }
-        });
-        if (hasInvalidEmoji) {
-            return { out: line, converted: false };
-        }
-
-        const out = formatDialogue(character, dialogue, { expression, characterOverride: override });
-        return { out: out, converted: true };
-    }
-
-    m = line.match(DIALOGUE_EXPR);
-    if (m) {
-        const character = m[1].trim();
-        const expression = m[2].trim();
-        let dialogue = m[3].trim();
-
-        const animatedMatch = dialogue.match(ANIMATED_EMOJI);
-        if (animatedMatch) {
-            const prefix = animatedMatch[1];
-            const suffix = animatedMatch[2].trim();
-            if (!isValidAnimatedEmoji(prefix, suffix)) {
-                return { out: line, converted: false };
-            }
-            const fullTag = `${prefix}: ${suffix}`;
-            return { out: `{{Script/animated emoji|${character}|${fullTag}}}`, converted: true };
-        }
-
-        let hasInvalidEmoji = false;
-        dialogue = dialogue.replace(/<([^:>]+)>/g, function(match, emojiName) {
-            if (EMOJI_LIST.includes(emojiName)) {
-                return `{{Emoji|${emojiName}}}`;
-            } else {
-                hasInvalidEmoji = true;
-                return match;
-            }
-        });
-        if (hasInvalidEmoji) {
-            return { out: line, converted: false };
-        }
-
-        const out = formatDialogue(character, dialogue, { expression });
-        return { out: out, converted: true };
-    }
-
-    m = line.match(DIALOGUE);
-    if (m) {
-        const character = m[1].trim();
-        let dialogue = m[2].trim();
-
-        const animatedMatch = dialogue.match(ANIMATED_EMOJI);
-        if (animatedMatch) {
-            const prefix = animatedMatch[1];
-            const suffix = animatedMatch[2].trim();
-            if (!isValidAnimatedEmoji(prefix, suffix)) {
-                return { out: line, converted: false };
-            }
-            const fullTag = `${prefix}: ${suffix}`;
-            return { out: `{{Script/animated emoji|${character}|${fullTag}}}`, converted: true };
-        }
-
-        let hasInvalidEmoji = false;
-        dialogue = dialogue.replace(/<([^:>]+)>/g, function(match, emojiName) {
-            if (EMOJI_LIST.includes(emojiName)) {
-                return `{{Emoji|${emojiName}}}`;
-            } else {
-                hasInvalidEmoji = true;
-                return match;
-            }
-        });
-        if (hasInvalidEmoji) {
-            return { out: line, converted: false };
-        }
-
-        const out = formatDialogue(character, dialogue, {});
-        return { out: out, converted: true };
-    }
-
     return { out: line, converted: false };
 }
 
 function processLines(lines, start = 0) {
-    const output = [];
+    const result = [];
     let i = start;
     while (i < lines.length) {
         const line = lines[i];
@@ -399,32 +545,116 @@ function processLines(lines, start = 0) {
                 i++;
             }
             if (texts.length > 0) {
-                output.push(`{{Script/narration large|${texts.join(';;')}}}`);
+                result.push({
+                    out: `{{Script/narration large|${texts.join(';;')}}}`,
+                    converted: true,
+                    blank: false
+                });
             }
             continue;
         }
 
+        if (line.match(OVERLAY_START)) {
+            const overlayResult = parseOverlay(lines, i);
+            for (const outLine of overlayResult.output) {
+                result.push({ out: outLine, converted: true, blank: false });
+            }
+            i = overlayResult.nextIndex;
+            continue;
+        }
+
         if (line.match(CHOICE_START)) {
-            const result = parseChoice(lines, i);
-            output.push(...result.output);
-            i = result.nextIndex;
+            const choiceResult = parseChoice(lines, i);
+            for (const outLine of choiceResult.output) {
+                result.push({ out: outLine, converted: true, blank: false });
+            }
+            i = choiceResult.nextIndex;
             continue;
         }
 
         if (line.match(PHONE_START)) {
-            const result = parsePhone(lines, i);
-            output.push(...result.output);
-            i = result.nextIndex;
+            const phoneResult = parsePhone(lines, i);
+            for (const outLine of phoneResult.output) {
+                result.push({ out: outLine, converted: true, blank: false });
+            }
+            i = phoneResult.nextIndex;
             continue;
         }
 
         const converted = convertLine(line, false);
-        if (!converted.blank) {
-            output.push(converted.out);
+        result.push(converted);
+        i++;
+    }
+    return { items: result, nextIndex: i };
+}
+
+function parseOverlay(lines, startIdx) {
+    const startLine = lines[startIdx];
+    const overlayMatch = startLine.match(OVERLAY_START);
+    if (!overlayMatch) {
+        return { output: [startLine], nextIndex: startIdx + 1 };
+    }
+
+    const typeText = overlayMatch[1].trim();
+    let params = {};
+
+    if (OVERLAY_SPECIAL_TYPES[typeText]) {
+    params = OVERLAY_SPECIAL_TYPES[typeText];
+    } else {
+        const customMatch = typeText.match(/Color\s*=\s*([^-]+?)\s*-\s*Effect\s*=\s*([^-]+?)$/i);
+        if (customMatch) {
+            const color = customMatch[1].trim();
+            const effect = customMatch[2].trim();
+            if (OVERLAY_COLORS.includes(color) && OVERLAY_EFFECTS.includes(effect)) {
+                params.Color = color;
+                params.Effect = effect;
+            } else {
+                return { output: [startLine], nextIndex: startIdx + 1 };
+            }
+        } else {
+            return { output: [startLine], nextIndex: startIdx + 1 };
+        }
+    }
+
+    let i = startIdx + 1;
+    let depth = 1;
+    const contentLines = [];
+
+    while (i < lines.length) {
+        const line = lines[i];
+        if (line.match(OVERLAY_START)) {
+            depth++;
+        } else if (line.match(OVERLAY_END)) {
+            depth--;
+            if (depth === 0) {
+                i++;
+                break;
+            }
+        }
+        if (depth > 0) {
+            contentLines.push(line);
         }
         i++;
     }
-    return { output, nextIndex: i };
+
+    if (depth !== 0) {
+        contentLines.length = 0;
+        for (let j = startIdx + 1; j < lines.length; j++) {
+            contentLines.push(lines[j]);
+        }
+        i = lines.length;
+    }
+
+    const processed = processLines(contentLines, 0);
+    const dialogueContent = processed.items.filter(item => !item.blank).map(item => item.out).join('\n');
+
+    let paramStr = '';
+    for (const [key, value] of Object.entries(params)) {
+        paramStr += `|${key}=${value}`;
+    }
+    let out = `{{Script/overlay${paramStr}|Dialogue=\n${dialogueContent}\n}}`;
+
+    return { output: [out], nextIndex: i };
 }
 
 function parseChoice(lines, startIdx) {
@@ -506,7 +736,7 @@ function parseChoice(lines, startIdx) {
     for (const tab of tabs) {
         const tabLines = tab.content.split('\n');
         const processed = processLines(tabLines, 0);
-        const innerOutput = processed.output;
+        const innerOutput = processed.items.filter(item => !item.blank).map(item => item.out);
         tabOutput.push(`|-|${tab.title} =`);
         if (innerOutput.length === 0) {
             tabOutput.push('');
@@ -544,7 +774,7 @@ function parsePhone(lines, startIdx) {
     }
 
     const processed = processLines(contentLines, 0);
-    const dialogueContent = processed.output.join('\n');
+    const dialogueContent = processed.items.filter(item => !item.blank).map(item => item.out).join('\n');
 
     let phoneOut = `{{Script/phone|${type}`;
     if (name) {
@@ -673,8 +903,27 @@ function convert() {
         }
     }
 
-    const result = processLines(contentLines, 0);
-    let outLines = result.output;
+    const processedResult = processLines(contentLines, 0);
+
+    for (let idx = 0; idx < lines.length; idx++) {
+        if (isFailedScriptLine[idx]) {
+            processedResult.items.push({ out: lines[idx], converted: false, blank: false });
+        }
+    }
+
+    let convertedCount = 0, skipped = 0;
+    const skippedLines = [];
+    for (const item of processedResult.items) {
+        if (item.blank) continue;
+        if (item.converted) {
+            convertedCount++;
+        } else {
+            skipped++;
+            skippedLines.push(item.out);
+        }
+    }
+
+    let outLines = processedResult.items.filter(item => !item.blank && item.converted).map(item => item.out);
 
     if (hasScriptBlock) {
         let startTag = '{{Script/start}}';
@@ -687,6 +936,7 @@ function convert() {
         }
         outLines.unshift(startTag);
         outLines.push('{{Script/end}}');
+        convertedCount += 2;
     }
 
     if (!raw.trim()) {
@@ -701,8 +951,14 @@ function convert() {
     }).join('');
 
     const status = document.getElementById('status');
-    status.className = 'status show ok';
-    status.innerHTML = `${outLines.length} line${outLines.length !== 1 ? 's' : ''} generated.`;
+    if (skipped === 0) {
+        status.className = 'status show ok';
+        status.innerHTML = `${convertedCount} line${convertedCount !== 1 ? 's' : ''} converted successfully.`;
+    } else {
+        status.className = 'status show warning';
+        const preview = skippedLines.slice(0, 5).map(l => `  ${escapeHtml(l.slice(0, 60))}${l.length > 60 ? '…' : ''}`).join('<br>');
+        status.innerHTML = `${convertedCount} line${convertedCount !== 1 ? 's' : ''} converted successfully &mdash; ${skipped} line${skipped !== 1 ? 's' : ''} had no recognisable format and were left unchanged:<div class="skipped-list">${preview}</div>`;
+    }
 
     updateBackdrop(lines, isScriptLine, isFailedScriptLine);
 }
